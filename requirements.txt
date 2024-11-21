@@ -83,6 +83,6 @@ tzdata
 urllib3
 uvicorn
 websockets
-Werkzeu
+Werkzeug
 yarl
 zope.interfac
