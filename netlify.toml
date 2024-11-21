@@ -3,6 +3,7 @@
   publish = "staticfiles"
 
 
+
 [context.production.environment]
   DJANGO_SETTINGS_MODULE = "capstone.settings"
   PYTHON_VERSION = "3.9"

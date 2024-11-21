@@ -33,7 +33,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['polonort.netlify.app']
+ALLOWED_HOSTS = ['*']
 
 
 # Directorios adicionales donde buscar archivos estáticos
@@ -42,8 +42,6 @@ STATICFILES_DIRS = [
 ]
 
 # Static files (CSS, JavaScript, Images)
-STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'  # Definición del directorio donde se recogen archivos estáticos en producción
 
 # Application definition
 
@@ -81,6 +79,8 @@ MIDDLEWARE = [
 
 ]
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 ROOT_URLCONF = 'capstone.urls'
 
