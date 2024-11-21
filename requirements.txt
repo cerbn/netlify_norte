@@ -85,4 +85,4 @@ uvicorn
 websockets
 Werkzeug
 yarl
-zope.interfac
+zope.interface
