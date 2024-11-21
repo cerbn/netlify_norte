@@ -1,0 +1,200 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block contenido %}
+<style>
+.container {
+    margin-top: 50px;
+}
+
+/* Aumentar el tamaño de la tabla */
+.table {
+    width: 100%;
+    margin-bottom: 30px;
+    border-collapse: collapse;
+    font-size: 1.2rem; /* Aumentar tamaño de la fuente */
+}
+
+.table th, .table td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 20px; /* Aumentar el espacio interno para mejor legibilidad */
+    border-bottom: 1px solid #ddd;
+}
+
+.table th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+    font-size: 1.3rem; /* Hacer el texto del encabezado más grande */
+}
+
+/* Imágenes del producto */
+.table img {
+    width: 100px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+.table input[type="number"] {
+    width: 80px;
+    text-align: center;
+    font-size: 1.2rem; /* Agrandar las entradas de cantidad */
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+/* Botón de eliminar renovado */
+.button-eliminar {
+    background-color: #ff4c4c;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    padding: 15px;
+    width: 60px;
+    height: 60px;
+    cursor: pointer;
+    font-size: 1.5rem;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s ease;
+}
+
+.button-eliminar:hover {
+    background-color: #e60000;
+}
+
+/* Aumentar el tamaño del resumen */
+.card-body h5 {
+    font-size: 1.6rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.card-body h4 {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #28a745;
+}
+
+.card-body p {
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+}
+
+/* Botón de pago */
+.btn-block {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+.btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+}
+
+</style>
+
+<div class="container mt-5">
+    <h2 class="mb-4">Carro de Compras</h2>
+
+    {% if items %}
+    <div class="row">
+        <div class="col-md-8">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Artículo</th>
+                        <th>Precio</th>
+                        <th>Cantidad</th>
+                        <th>Subtotal</th>
+                        <th>Eliminar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                    <tr>
+                        <td>
+                            <img src="{{ item.libro.imagen_url|default:'https://via.placeholder.com/150' }}" class="card-img-top" alt="{{ libro.titulo }}">
+                            {{ item.libro.titulo }}
+                        </td>
+                        <td>{{ item.libro.precio }} CLP</td>
+                        <td>
+                            <input type="number" class="form-control cantidad" data-item-id="{{ item.id }}" value="{{ item.cantidad }}" min="1">
+                        </td>
+                        <td>{{ item.precio_total }} CLP</td>
+                        <td>
+                            <a href="{% url 'eliminar_del_carrito' item.id %}" class="button-eliminar">
+                                🗑
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Resumen del Pedido -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5>Resumen</h5>
+                    <p>Subtotal: {{ total }} CLP</p>
+                    <p>Impuestos: $0</p>
+                    <h4>Total del pedido: {{ total_final }} CLP</h4>
+                    <a href="{% url 'confirmacion_direccion' %}" class="btn btn-success btn-block">Ir al Pago</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-warning text-center">
+        <strong>No tienes productos en tu carro de compras.</strong>
+        <br>
+        <a href="{% url 'home' %}" class="btn btn-primary mt-3">Ir a la página de inicio</a>
+    </div>
+    {% endif %}
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Escuchar cambios en el input de cantidad
+        $('.cantidad').on('change', function() {
+            let itemId = $(this).data('item-id');
+            let nuevaCantidad = $(this).val();
+
+            $.ajax({
+                url: '{% url "actualizar_cantidad" %}',  // Asegúrate de tener esta URL y vista definida
+                method: 'POST',
+                data: {
+                    'item_id': itemId,
+                    'cantidad': nuevaCantidad,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function(response) {
+                    location.reload();  // Recargar para reflejar los cambios
+                },
+                error: function(xhr, status, error) {
+                    alert('Error al actualizar la cantidad.');
+                }
+            });
+        });
+    });
+</script>
+
+{% endblock %}

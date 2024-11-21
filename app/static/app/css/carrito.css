@@ -1,0 +1,147 @@
+/* Fondo celeste para la página del carrito */
+body {
+    background-color: #e0f7fa; /* Fondo celeste suave */
+}
+
+/* Estilo general para la página del carrito */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h2 {
+    color: #333;
+    font-size: 28px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Estilos para los productos en el carrito */
+.card {
+    background-color: white; /* Fondo blanco para las tarjetas */
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.card-header h5 {
+    font-size: 20px;
+    font-weight: bold;
+    color: #555;
+}
+
+.card-body h3 {
+    font-size: 18px;
+    font-weight: bold;
+    color: #444;
+    margin-bottom: 10px;
+}
+
+.card-body p {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.card-body h5 {
+    font-size: 16px;
+    font-weight: bold;
+    color: #444;
+    margin-top: 10px;
+}
+
+.card-body .input-group {
+    margin-top: 10px;
+}
+
+.card-body .btn-danger {
+    background-color: #d9534f;
+    border-color: #d43f3a;
+    color: white;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.card-body .btn-danger:hover {
+    background-color: #c9302c;
+    border-color: #ac2925;
+}
+
+/* Estilos para el resumen del pedido */
+.card-header h5 {
+    font-size: 18px;
+    font-weight: bold;
+    color: #555;
+}
+
+.card-body p {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.card-body h5 {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.card-body hr {
+    border-top: 1px solid #ddd;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.btn-primary {
+    background-color: #0275d8;
+    border-color: #0275d8;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #025aa5;
+    border-color: #025aa5;
+}
+
+.btn-block {
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+
+/* Ajustes para pantallas más pequeñas */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+
+    h2 {
+        font-size: 24px;
+    }
+
+    .card-header h5 {
+        font-size: 16px;
+    }
+
+    .card-body h3 {
+        font-size: 16px;
+    }
+
+    .card-body p, .card-body h5 {
+        font-size: 14px;
+    }
+
+    .card-body h5 {
+        margin-bottom: 10px;
+    }
+
+    .btn-primary, .btn-danger {
+        font-size: 14px;
+    }
+}

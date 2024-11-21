@@ -1,0 +1,177 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block contenido %}
+<style>
+/* Estilos generales */
+body {
+    background-color: #f4f4f9;
+    font-family: Arial, sans-serif;
+}
+
+/* Contenedor de la información del usuario */
+.user-profile {
+    margin: 40px auto;
+    padding: 30px;
+    border-radius: 15px;
+    background-color: #ffffff;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    width: 60%;
+    max-width: 800px;
+}
+
+/* Título del perfil */
+h1 {
+    color: #2F80ED;
+    margin-bottom: 20px;
+    font-size: 2rem;
+    text-align: center;
+}
+
+/* Información del usuario */
+.profile-section {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.profile-item {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+}
+
+.profile-item label {
+    font-weight: bold;
+    color: #333;
+}
+
+.profile-item span {
+    color: #555;
+}
+
+.profile-image {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.profile-image img {
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+}
+
+/* Sección de calificaciones */
+.rating-section {
+    margin-top: 30px;
+}
+
+.rating-section h2 {
+    color: #2F80ED;
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.rating-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.rating-item {
+    padding: 10px;
+    background-color: #85b2df;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.rating-item span {
+    font-weight: bold;
+    color: #000000;
+}
+
+/* Botón de contacto */
+.contact-button {
+    display: block;
+    margin: 30px auto 0;
+    padding: 12px 25px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1rem;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.contact-button:hover {
+    background-color: #218838;
+}
+</style>
+
+<div class="user-profile">
+    <div class="profile-image">
+        <img src="https://encrypted-tbn1.gstatic.com/licensed-image?q=tbn:ANd9GcSAHmDSOdLA5YgFlEkMmgdweIf3jyGI0EGKqU5U7TpO70GFAY48v1N51eMRpY6mbG-VzfPvgObhOwB8lX4" alt="Foto de perfil del usuario">
+    </div>
+    
+    <h1>Información del Usuario</h1>
+
+    <div class="profile-section">
+        <div class="profile-item">
+            <label>Nombre:</label>
+            <span>{{ usuario.username }}</span>
+        </div>
+        <div class="profile-item">
+            <label>Correo electrónico:</label>
+            <span>{{ usuario.email }}</span>
+        </div>
+
+        <div class="profile-item">
+            <label>Fecha de registro:</label>
+            <span>{{ usuario.date_joined }}</span>
+        </div>
+        <div class="profile-item">
+            <label>Dirección:</label>
+            <span>{{ usu.direccion }}</span>
+        </div>
+
+
+    <!-- Sección de calificaciones -->
+    <h2>Calificaciones de {{ usuario.username }}</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Libro</th>
+                <th>Rol</th>
+                <th>Calificación</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            {% for calificacion in calificaciones %}
+            <tr>
+                <td>{{ calificacion.libro }}</td>
+                <td>{{ calificacion.rol }}</td>
+                <td>{{ calificacion.calificacion }} / 5</td>
+
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="text-center">No hay calificaciones disponibles.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    
+
+    <a href="mailto:{{ usuario.email }}" class="contact-button">Contactar al Vendedor</a>
+</div>
+
+{% endblock %}

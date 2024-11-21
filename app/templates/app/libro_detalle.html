@@ -1,0 +1,404 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link href="{% static 'app/css/confirmacion_pago.css' %}" rel="stylesheet"> <!-- Enlace a la hoja de estilo home.css -->
+{% endblock %}
+{% block contenido %}
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6, p, label, a {
+    color: black !important;
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+    margin: 20px;
+    gap: 20px;
+}
+
+.book-card {
+    width: 30%;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+.book-card img {
+    width: 5cm;
+    height: 8cm;
+    object-fit: cover;
+    margin-bottom: 20px;
+}
+
+.book-details p {
+    margin: 5px 0;
+}
+
+    .book-details p {
+        margin: 5px 0;
+        color: #333;
+    }
+
+    .book-review {
+        flex-grow: 1;
+        padding: 20px;
+        background-color: #5d8c9b;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        position: relative;
+    }
+
+    .book-review h2 {
+        margin-bottom: 20px;
+    }
+
+    .price-cart-section {
+        position: absolute;
+        top: 20px;
+        right: -200px;
+        width: 180px;
+        padding: 20px;
+        background-color: #f1f1f1;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .price-cart-section h3 {
+        color: black;
+        margin-bottom: 10px;
+    }
+    .price-cart-section h5 {
+        color: black;
+        margin-bottom: 10px;
+    }
+
+    .price-cart-section input[type="number"] {
+        width: 60px;
+        padding: 5px;
+        margin-bottom: 20px;
+    }
+
+    .price-cart-section button {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .price-cart-section button:hover {
+        background-color: #45a049;
+    }
+
+    .comments-section {
+        margin-top: 30px;
+        padding: 20px;
+        background-color: #f0f0f0;
+        border-radius: 10px;
+    }
+
+    .comment {
+        margin-bottom: 20px;
+    }
+
+    .stars {
+        color: gold;
+        font-size: 18px;
+    }
+
+    textarea {
+        width: 100%;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+
+    button {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #45a049;
+    }
+
+    h3 {
+        color: black;
+    }
+
+    label {
+        color: black;
+    }
+    .ediciones, .ficha-tecnica, .biografia, .libros-relacionados, .opiniones, .comentario {
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+    .carousel {
+        display: flex;
+        gap: 20px;
+        overflow-x: auto;
+        }
+
+    .edicion, .libro-relacionado {
+        text-align: center;
+        width: 150px;
+        }
+
+    .edicion img, .libro-relacionado img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        }
+
+        .libros-relacionados {
+            position: relative;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .carousel {
+            display: flex;
+            gap: 20px;
+            overflow-x: scroll;
+            scroll-behavior: smooth;
+        }
+
+        .carousel::-webkit-scrollbar {
+            display: none;
+        }
+
+        .libro-relacionado {
+            min-width: 150px;
+            flex-shrink: 0;
+            text-align: center;
+        }
+
+        .libro-relacionado img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .comprar-btn {
+            background-color: #FF6347;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        .comprar-btn:hover {
+            background-color: #FF4500;
+        }
+
+        /* Flechas de navegación */
+        .prev, .next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .prev {
+            left: 0;
+        }
+
+        .next {
+            right: 0;
+        }
+
+        .prev:hover, .next:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+</style>
+
+<div class="container">
+    <!-- Tarjeta del libro con detalles -->
+    <div class="book-card">
+        <img src="{{ libro.imagen_url|default:'https://via.placeholder.com/150' }}" class="card-img-top" alt="{{ libro.titulo }}">
+        <div class="book-details">
+            <p><strong>Formato:</strong> {{ libro.formato }}</p>
+            <p><strong>Autor:</strong> <a href="{% url 'autor_detalle' libro.autor.id %}" class="text-decoration-none">{{ libro.autor.nombre }}</a></p>
+            <p><strong>Editorial:</strong> Editorial ABC</p>
+            <p><strong>Año:</strong> {{ libro.anio }}</p>
+            <p><strong>Idioma:</strong> {{ libro.idioma }}</p>
+            <p><strong>N° Páginas:</strong> {{ libro.num_paginas }}</p>
+            <p><strong>Encuadernación:</strong> {{ libro.encuadernacion }}</p>
+            <p><strong>Dimensiones:</strong> {{ libro.dimensiones }}</p>
+            <p><strong>ISBN:</strong> {{ libro.isbn }}</p>
+            <p><strong>Categorías:</strong> {{ libro.categoria.nombre }}</p>
+        </div>
+    </div>
+
+    <!-- Reseña del libro -->
+    <div class="book-review">
+        <h2>Reseña del Libro</h2>
+        <p>{{ libro.descripcion }}</p>
+
+                <!-- Sección de precio y añadir al carrito -->
+                <div class="price-cart-section">
+                    <h3>Precio: ${{ libro.precio }}</h3>
+                    <h5>Quedan: {{ libro.stock }}</h5>
+                    <a href="{% url 'agregar_al_carrito' libro.id %}" class="btn btn-primary btn-block" id="cart-btn-{{ libro.id }}" onclick="changeButton('{{ libro.id }}')">
+                        <svg class="cart" fill="white" viewBox="0 0 576 512" height="1em" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M0 24C0 10.7 10.7 0 24 0H69.5c22 0 41.5 12.8 50.6 32h411c26.3 0 45.5 25 38.6 50.4l-41 152.3c-8.5 31.4-37 53.3-69.5 53.3H170.7l5.4 28.5c2.2 11.3 12.1 19.5 23.6 19.5H488c13.3 0 24 10.7 24 24s-10.7 24-24 24H199.7c-34.6 0-64.3-24.6-70.7-58.5L77.4 54.5c-.7-3.8-4-6.5-7.9-6.5H24C10.7 48 0 37.3 0 24zM128 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm336-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z"></path>
+                        </svg>
+                        <span id="cart-btn-text-{{ l.id }}">Agregar al carrito</span>
+                    </a>                
+                </div>
+
+
+        <!-- Sección de biografía del autor -->
+        <div class="biografia">
+            <h3>Biografía del Autor</h3>
+            <p>Gabriel García Márquez fue un escritor, guionista y periodista colombiano, considerado uno de los autores más importantes del siglo XX. Ganador del Premio Nobel de Literatura en 1982, es conocido principalmente por su obra maestra "Cien años de soledad", una novela que popularizó el realismo mágico. Su obra ha dejado una huella profunda en la literatura hispanoamericana y mundial.</p>
+        </div>
+        <div class="container">
+            <!-- Sección de libros relacionados -->
+            <div class="libros-relacionados">
+                <h3>Libros Relacionados</h3>
+                <button class="prev" onclick="scrollCarousel(-300)">&#10094;</button>
+                <div class="carousel" id="related-books-carousel">
+                    {% for libro in libros_relacionados %}
+                    <div class="libro-relacionado">
+                        <img src="{{ libro.imagen_url|default:'https://via.placeholder.com/150' }}" class="card-img-top" alt="{{ libro.titulo }}">
+                        <h5 class="card-title">{{ libro.titulo }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{ libro.precio }} CLP</h6>
+                        <p class="card-text">{{ libro.descripcion|truncatewords:20 }}</p>
+                        <a href="{% url 'libro_detalle' libro.id %}" class="btn btn-primary">Ver Detalles</a>
+                    </div>
+                    {% empty %}
+                    <p>No hay libros relacionados disponibles.</p>
+                    {% endfor %}
+                </div>
+                <button class="next" onclick="scrollCarousel(300)">&#10095;</button>
+            </div>
+        </div>
+        
+
+
+
+
+        <!-- Sección de comentarios -->
+        <!-- Sección de comentarios -->
+        <!-- Sección de comentarios -->
+        <div class="comments-section">
+            <h2>Comentarios de los usuarios</h2>
+
+            <!-- Mostrar los comentarios existentes -->
+            {% for comentario in comentarios %}
+            <div class="comment">
+                <p><strong><a href="#" class="text-decoration-none">{{ comentario.usuario.username }}</a></strong> 
+                {% load custom_tags %}
+                <span class="stars">
+                    {% for i in 5|stars_range %}
+                        {% if i <= comentario.calificacion %}
+                            ★
+                        {% else %}
+                            ☆
+                        {% endif %}
+                    {% endfor %}
+                </span>
+
+            </p>
+                <p>{{ comentario.comentario }}</p>
+                <p><small>{{ comentario.fecha }}</small></p>
+            </div>
+            {% endfor %}
+
+            <!-- Formulario para dejar un comentario -->
+            {% if request.user.is_authenticated %}
+            <h3>Deja tu comentario</h3>
+            <form action="{% url 'libro_detalle' libro.id %}" method="POST" onsubmit="return validarComentario()">
+                {% csrf_token %}
+                <label for="rating">Calificación:</label>
+                <select id="rating" name="rating" required>
+                    <option value="5">★★★★★</option>
+                    <option value="4">★★★★☆</option>
+                    <option value="3">★★★☆☆</option>
+                    <option value="2">★★☆☆☆</option>
+                    <option value="1">★☆☆☆☆</option>
+                </select><br><br>
+                <label for="comment">Comentario:</label><br>
+                <textarea id="comment" name="comment" rows="4" cols="50" placeholder="Escribe tu comentario aquí..." required></textarea><br><br>
+                <button type="submit">Enviar Comentario</button>
+            </form>
+            <script>
+                function validarComentario() {
+                    var comentario = document.getElementById("comment").value.trim();
+                    if (comentario === "") {
+                        alert("El comentario no puede estar vacío.");
+                        return false; // Evita el envío del formulario
+                    }
+                    return true; // Permite el envío
+                }
+            </script>
+            {% else %}
+            <p>Debes <a href="{% url 'login' %}">iniciar sesión</a> para dejar un comentario.</p>
+            {% endif %}
+
+
+</div>
+<script>
+    function changeButton(libroId) {
+        // Obtener el botón y el texto del botón
+        var btn = document.getElementById('cart-btn-' + libroId);
+        var btnText = document.getElementById('cart-btn-text-' + libroId);
+
+        // Cambiar el texto y estilo del botón a "Agregado"
+        btn.classList.remove('btn-primary');
+        btn.classList.add('btn-success');
+        btnText.textContent = 'Agregado';
+
+        // Deshabilitar temporalmente el botón
+        btn.disabled = true;
+
+        // Después de 5 segundos, volver el botón a su estado original
+        setTimeout(function() {
+            btn.classList.remove('btn-success');
+            btn.classList.add('btn-primary');
+            btnText.textContent = 'Agregar al carrito';
+            btn.disabled = false;
+        }, 5000);
+    }
+
+    function scrollCarousel(distance) {
+        const carousel = document.getElementById('related-books-carousel');
+        carousel.scrollBy({
+            left: distance,
+            behavior: 'smooth'
+        });
+    }
+</script>
+{% endblock %}

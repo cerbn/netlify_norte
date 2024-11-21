@@ -1,0 +1,563 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+
+{% block contenido %}
+<style>
+        /* home.css */
+
+/* Fondo de la página principal */
+body {
+    background: #56CCF2;  
+    background: -webkit-linear-gradient(to right, #2F80ED, #56CCF2);  
+    background: linear-gradient(to right, #2F80ED, #56CCF2); 
+    color: #333; /* Texto más oscuro para mayor contraste */
+}
+
+/* Estilos del Carrusel */
+.carousel {
+    position: relative;
+    width: 100%;
+    height: 400px; /* Altura fija del carrusel */
+    overflow: hidden;
+    border-radius: 10px; /* Bordes redondeados */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Sombra sutil */
+}
+
+.carousel-inner img {
+    object-fit: cover;
+    height: 100%;
+    width: 100%;
+    transition: transform 0.5s ease-in-out; /* Transición suave */
+}
+
+.carousel-item:hover img {
+    transform: scale(1.05); /* Efecto de zoom en hover */
+}
+
+/* Botones de control del carrusel */
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    background-color: rgba(0, 0, 0, 0.3); /* Fondo oscuro semitransparente */
+    border-radius: 50%; /* Botones redondeados */
+}
+
+/* Estilos del catálogo de libros */
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-10px); /* Levanta la tarjeta en hover */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Sombra más fuerte en hover */
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.card-subtitle {
+    font-size: 1rem;
+    color: #888; /* Subtítulo más claro */
+    margin-bottom: 1rem;
+}
+
+.card-text {
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
+    color: #555; /* Texto ligeramente más oscuro */
+}
+.card-img-top {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+/* Botones del catálogo */
+.btn-primary {
+    background: #50C9C3; 
+    background: -webkit-linear-gradient(to right, #96DEDA, #50C9C3);  
+    background: linear-gradient(to right, #96DEDA, #50C9C3);
+    border: none;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3; /* Color diferente al hacer hover */
+    transform: translateY(-2px); /* Efecto de flotación en hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra más fuerte en hover */
+}
+
+.btn-outline-success {
+    color: #28a745;
+    border-color: #28a745;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+.btn-outline-success:hover {
+    background-color: #28a745;
+    color: white;
+}
+
+/* Estilos para el botón Agregar al carrito */
+.cartBtn {
+    width: 155px;
+    height: 50px;
+    border: none;
+    border-radius: 0px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    color: white;
+    font-weight: 500;
+    background-color: rgb(112, 181, 204);
+    box-shadow: 0 10px 15px -5px rgba(27, 27, 27, 0.2);
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.cartBtn:hover {
+    background-color: #50C9C3;
+    box-shadow: 0 15px 20px rgba(27, 27, 27, 0.3);
+    transform: translateY(-5px); /* Efecto de elevación en hover */
+}
+
+.cartBtn .cart {
+    z-index: 2;
+}
+
+.cartBtn:hover .product {
+    animation: slide-in-top 1.2s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+}
+
+@keyframes slide-in-top {
+    0% {
+        transform: translateY(-30px);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(0) rotate(-90deg);
+        opacity: 1;
+    }
+}
+
+@keyframes slide-in-left {
+    0% {
+        transform: translateX(-10px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+    .card {
+        margin-bottom: 20px;
+    }
+    .carousel-item {
+        height: 300px;
+    }
+}
+
+/* Títulos y separadores */
+.section-title {
+    text-align: left;
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.divider {
+    border: none;
+    height: 4px;
+    background-color: #000000;
+    margin-bottom: 20px;
+}
+/* Contenedor del catálogo de libros */
+/* Contenedor del catálogo de libros */
+.catalog-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around; /* Más separación entre las tarjetas */
+    margin-left: -10px;  /* Reducir el margen izquierdo del contenedor */
+    margin-right: -10px; /* Reducir el margen derecho del contenedor */
+}
+
+/* Cada tarjeta ocupará el 18% del ancho del contenedor para asegurar 5 tarjetas por fila */
+.catalog-row .card {
+    flex: 1 1 19%; /* Ajustar a 19% para hacerlas más grandes y aprovechar mejor el espacio */
+    margin: 10px;  /* Aumentar el margen para separar más las tarjetas */
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hover en las tarjetas */
+.catalog-row .card:hover {
+    transform: translateY(-10px); /* Efecto de elevación */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Sombra más fuerte en hover */
+}
+
+/* Imagen dentro de las tarjetas */
+.catalog-row .card-img-top {
+    height: 200px; /* Ajusta la altura de las imágenes */
+    object-fit: cover; /* Mantiene las proporciones de las imágenes */
+}
+
+/* Responsividad: Ajuste en pantallas más pequeñas */
+@media (max-width: 1200px) {
+    .catalog-row .card {
+        flex: 1 1 22%; /* Ajustar a 4 tarjetas por fila en pantallas más pequeñas */
+    }
+}
+
+@media (max-width: 992px) {
+    .catalog-row .card {
+        flex: 1 1 30%; /* Ajustar a 3 tarjetas por fila en pantallas medianas */
+    }
+}
+
+@media (max-width: 768px) {
+    .catalog-row .card {
+        flex: 1 1 45%; /* Ajustar a 2 tarjetas por fila en pantallas pequeñas */
+    }
+}
+
+@media (max-width: 576px) {
+    .catalog-row .card {
+        flex: 1 1 100%; /* 1 tarjeta por fila en pantallas muy pequeñas */
+    }
+}
+.card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%; /* Asegura que todas las tarjetas tengan la misma altura */
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%; /* Mantiene el contenido distribuido de manera uniforme */
+}
+
+.card-body a {
+    display: block;
+    width: 100%; /* Hace que los botones ocupen el 100% del ancho de la tarjeta */
+    text-align: center; /* Centra el texto en el botón */
+    margin-bottom: 15px; /* Aumenta la separación entre botones */
+}
+
+.mt-auto {
+    margin-top: auto; /* Asegura que los botones estén alineados al fondo */
+}
+
+/* Ajustes de los botones */
+.btn-primary, .btn-outline-secondary {
+    width: 100%; /* Hace que los botones sean más anchos */
+    padding: 10px; /* Añade más relleno para que sean más altos */
+}
+
+
+</style>
+<div class="container mt-4">
+    <!-- Carrusel -->
+    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="{% static 'app/images/1f780209-41df-4bc2-b05d-adf57f966b2a.jpg' %}" class="d-block w-100" alt="Imagen 1">
+            </div>
+            <div class="carousel-item">
+                <img src="{% static 'app/images/498a80a9-14b5-41bc-ad84-08aad88693ac.jpg' %}" class="d-block w-100" alt="Imagen 2">
+            </div>
+            <div class="carousel-item">
+                <img src="{% static 'app/images/f8fb7fea-9d38-489e-b03c-435586fbc0f9.jpg' %}" class="d-block w-100" alt="Imagen 3">
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+
+<!-- Catálogo de Libros -->
+<div class="container mt-4 catalog-container">
+    <h3 class="section-title">Catálogo de libros</h3>
+    <hr class="divider">
+    <div class="catalog-row">
+        {% for l in libros %}
+        <div class="card">
+            <!-- Mostrar la imagen del libro si existe, de lo contrario, usar una imagen por defecto -->
+            <img src="{{ l.imagen_url|default:'https://via.placeholder.com/150' }}" class="card-img-top" alt="{{ l.titulo }}">
+            <div class="card-body d-flex flex-column">
+                <h5 class="card-title">{{ l.titulo }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{ l.precio }} CLP</h6>
+                <p class="card-text">{{ l.descripcion|truncatewords:20 }}</p>
+
+                <!-- Botón Ver detalles -->
+                <a href="{% url 'libro_detalle' l.id %}" class="btn btn-outline-secondary mb-3">Ver detalle</a>
+                
+                <!-- Botón de agregar al carrito con id dinámica -->
+                {% if request.user.is_authenticated %}
+                    {% if user.is_staff %}
+
+                    <a href="{% url 'editar_libro' l.id %}" class="btn btn-outline-secondary mb-3">Editar libro</a>
+                    {% endif %}
+
+                <a href="{% url 'agregar_al_carrito' l.id %}" class="btn btn-primary btn-block" id="cart-btn-{{ l.id }}" onclick="changeButton('{{ l.id }}')">
+                    <svg class="cart" fill="white" viewBox="0 0 576 512" height="1em" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 24C0 10.7 10.7 0 24 0H69.5c22 0 41.5 12.8 50.6 32h411c26.3 0 45.5 25 38.6 50.4l-41 152.3c-8.5 31.4-37 53.3-69.5 53.3H170.7l5.4 28.5c2.2 11.3 12.1 19.5 23.6 19.5H488c13.3 0 24 10.7 24 24s-10.7 24-24 24H199.7c-34.6 0-64.3-24.6-70.7-58.5L77.4 54.5c-.7-3.8-4-6.5-7.9-6.5H24C10.7 48 0 37.3 0 24zM128 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm336-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z"></path>
+                    </svg>
+                    <span id="cart-btn-text-{{ l.id }}">Agregar al carrito</span>
+                </a>
+                {% else %}
+                <a href="{% url 'login' %}" class="btn btn-primary btn-block">
+                    <svg class="cart" fill="white" viewBox="0 0 576 512" height="1em" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 24C0 10.7 10.7 0 24 0H69.5c22 0 41.5 12.8 50.6 32h411c26.3 0 45.5 25 38.6 50.4l-41 152.3c-8.5 31.4-37 53.3-69.5 53.3H170.7l5.4 28.5c2.2 11.3 12.1 19.5 23.6 19.5H488c13.3 0 24 10.7 24 24s-10.7 24-24 24H199.7c-34.6 0-64.3-24.6-70.7-58.5L77.4 54.5c-.7-3.8-4-6.5-7.9-6.5H24C10.7 48 0 37.3 0 24zM128 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm336-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z"></path>
+                    </svg>
+                    <span>Agregar al carrito</span>
+                </a>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Paginación -->
+    <nav aria-label="Paginación">
+        <ul class="pagination justify-content-center">
+            {% if libros_page.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page_libros={{ libros_page.previous_page_number }}">Anterior</a>
+            </li>
+            {% endif %}
+            <li class="page-item active">
+                <span class="page-link">{{ libros_page.number }}</span>
+            </li>
+            {% if libros_page.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page_libros={{ libros_page.next_page_number }}">Siguiente</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+
+</div>
+
+
+
+
+
+
+
+    <div class="container">
+        <h3 class="section-title">Libros en Venta</h3>
+        <hr class="divider">
+
+        <div class="row">
+            {% for libro in libros_vender %}
+            <div class="col-lg-3 col-md-4 mb-4">
+                <div class="card">
+                    <img src="{{ libro.imagen_url|default:'https://via.placeholder.com/150' }}" class="card-img-top" alt="{{ libro.titulo }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ libro.titulo }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{ libro.precio }} CLP</h6>
+                        <p class="card-text">{{ libro.descripcion|truncatewords:20 }}</p>
+                        <a href="{% url 'libro_detalle' libro.id %}" class="btn btn-primary">Ver Detalles</a>
+                        
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <!-- Paginación -->
+        <nav aria-label="Paginación">
+            <ul class="pagination justify-content-center">
+                {% if vender_page.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page_vender={{ vender_page.previous_page_number }}">Anterior</a>
+                </li>
+                {% endif %}
+                <li class="page-item active">
+                    <span class="page-link">{{ vender_page.number }}</span>
+                </li>
+                {% if vender_page.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page_vender={{ vender_page.next_page_number }}">Siguiente</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+
+        <h3 class="section-title">Libros para Intercambio</h3>
+        <hr class="divider">
+        
+<!-- Contenedor de libros en la página de inicio -->
+<div class="row">
+    {% for libro in intercambios %}
+    <div class="col-lg-3 col-md-4 mb-4">
+        <div class="card">
+            <img src="{{ libro.imagen_url|default:'https://via.placeholder.com/150' }}" class="card-img-top" alt="{{ libro.titulo }}">
+            <div class="card-body">
+                <h5 class="card-title">{{ libro.titulo }}</h5>
+                <h3 class="card-title">
+                    <a href="{% url 'perfil_usuario' libro.usuario.id %}" class="text-decoration-none text-primary">
+                        {{ libro.usuario.username }}
+                    </a>
+                </h3>
+
+                <p class="card-text">{{ libro.descripcion|truncatewords:20 }}</p>
+
+
+
+
+                <!-- Botones con condicionales -->
+                <a href="{% url 'libro_detalle' libro.id %}" class="btn btn-primary">Ver Detalles</a>
+
+                {% if libro.usuario != request.user %}
+                    {% if libro.id in solicitudes_pendientes %}
+                        <!-- Botón en rojo si la solicitud ya está pendiente -->
+                        <button class="btn btn-danger" disabled>Pendiente</button>
+                    {% else %}
+                        <!-- Botón de solicitar intercambio -->
+                        <form action="{% url 'solicitar_intercambio' %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="libro_id_objetivo" value="{{ libro.id }}">
+                            <button type="submit" class="btn btn-primary">Solicitar Intercambio</button>
+                        </form>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+           <!-- Paginación -->
+        <nav aria-label="Paginación">
+            <ul class="pagination justify-content-center">
+                {% if intercambios_page.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page_intercambios={{ intercambios_page.previous_page_number }}">Anterior</a>
+                </li>
+                {% endif %}
+                <li class="page-item active">
+                    <span class="page-link">{{ intercambios_page.number }}</span>
+                </li>
+                {% if intercambios_page.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page_intercambios={{ intercambios_page.next_page_number }}">Siguiente</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+    {% endfor %}
+</div>
+
+
+
+
+<!-- Sección de selección de libros de intercambio (oculta por defecto) -->
+<div id="bookSelectionSection" class="content-section" style="display: none; margin-top: 20px;">
+    <h3>Selecciona uno de tus libros para el intercambio</h3>
+    <input type="hidden" name="libro_id_objetivo" id="libro_id_objetivo"> <!-- ID del libro objetivo -->
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Título</th>
+                <th>Autor</th>
+                <th>Seleccionar</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for libro in mis_libros_intercambio %}
+            <tr>
+                <td>{{ libro.id }}</td>
+                <td>{{ libro.titulo }}</td>
+                <td>{{ libro.autor.nombre }}</td>
+                <td>
+                    <input type="radio" name="libro_intercambio" value="{{ libro.usuario.id }}" onclick="enviarSolicitudIntercambio('{{ libro.usuario.id }}')">
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <button type="button" class="btn btn-secondary mt-3" onclick="hideBookSelection()">Cancelar</button>
+</div>
+
+
+        
+    </div>
+</div>
+<script>
+    function changeButton(libroId) {
+        // Obtener el botón y el texto del botón
+        var btn = document.getElementById('cart-btn-' + libroId);
+        var btnText = document.getElementById('cart-btn-text-' + libroId);
+
+        // Cambiar el texto y estilo del botón a "Agregado"
+        btn.classList.remove('btn-primary');
+        btn.classList.add('btn-success');
+        btnText.textContent = 'Agregado';
+
+        // Deshabilitar temporalmente el botón
+        btn.disabled = true;
+
+        // Después de 5 segundos, volver el botón a su estado original
+        setTimeout(function() {
+            btn.classList.remove('btn-success');
+            btn.classList.add('btn-primary');
+            btnText.textContent = 'Agregar al carrito';
+            btn.disabled = false;
+        }, 5000);
+    }
+
+    function showBookSelection(libroObjetivoId) {
+        // Establecer el ID del libro objetivo en el campo oculto
+        document.getElementById('libro_id_objetivo').value = libroObjetivoId;
+        // Mostrar la sección de selección de libros
+        document.getElementById('bookSelectionSection').style.display = 'block';
+    }
+
+    function hideBookSelection() {
+        // Ocultar la sección de selección de libros
+        document.getElementById('bookSelectionSection').style.display = 'none';
+    }
+
+    function enviarSolicitudIntercambio(libroIntercambioId) {
+        const libroObjetivoId = document.getElementById('libro_id_objetivo').value;
+
+        // Redirigir a la URL con los parámetros libro_id_objetivo y libro_intercambio
+        window.location.href = `{% url 'solicitar_intercambio' %}?libro_id_objetivo=${libroObjetivoId}&libro_intercambio=${libroIntercambioId}`;
+    }
+
+
+</script>
+
+
+
+{% endblock %}

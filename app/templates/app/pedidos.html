@@ -1,0 +1,128 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block contenido %}
+<style>
+    .container {
+        margin-top: 50px;
+    }
+
+    .pedido {
+        background-color: #65a0c3;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .pedido h3 {
+        color: #333;
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+    }
+
+    .pedido-details p {
+        margin: 5px 0;
+        color: #000000;
+    }
+
+    .pedido-items {
+        margin-top: 15px;
+    }
+
+    .pedido-items table {
+        width: 100%;
+        margin-bottom: 15px;
+        border-collapse: collapse;
+    }
+
+    .pedido-items th, .pedido-items td {
+        border: 1px solid #000000;
+        text-align: left;
+        padding: 8px;
+    }
+
+    .pedido-items th {
+        background-color: #297051;
+        color: rgb(0, 0, 0);
+    }
+
+    .pedido-items td img {
+        width: 50px;
+        height: 70px;
+        margin-right: 10px;
+    }
+
+    .pedido-footer {
+        margin-top: 20px;
+        text-align: right;
+    }
+
+    .pedido-footer .total {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #007bff;
+    }
+
+    .pedido-footer .status {
+        font-size: 1rem;
+        font-weight: bold;
+        color: green;
+    }
+</style>
+
+<div class="container">
+    <h2 class="mb-4">Mis Pedidos</h2>
+
+    {% if pedidos %}
+        {% for pedido in pedidos %}
+        <div class="pedido">
+            <!-- Información general del pedido -->
+            <h3>Pedido #{{ pedido.n_orden_despacho }}</h3>
+            <div class="pedido-details">
+                <p><strong>Fecha de creación:</strong> {{ pedido.fecha_creacion }}</p>
+                <p><strong>Estado:</strong> {{ pedido.completado }}</p>
+                <p><strong>Dirección de envío:</strong> {{ pedido.direccion_envio }}</p>
+            </div>
+
+            <!-- Tabla de items del pedido -->
+            <div class="pedido-items">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Artículo</th>
+                            <th>Cantidad</th>
+                            <th>Precio Unitario</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in pedido.items %}
+                        <tr>
+                            <td>
+                                {{ item.libro.titulo }}
+                            </td>
+                            <td>{{ item.cantidad }}</td>
+                            <td>{{ item.libro.precio }} CLP</td>
+                            <td>{{ item.precio_total }} CLP</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Información del total del pedido -->
+            <div class="pedido-footer">
+                <p class="total">Total del Pedido: {{ pedido.precio_total }} CLP</p>
+                <p class="status">Estado del Pedido: {{ pedido.completado }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+    <div class="alert alert-info text-center">
+        <strong>No has realizado ningún pedido aún.</strong>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

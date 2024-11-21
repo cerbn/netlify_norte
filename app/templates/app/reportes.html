@@ -1,0 +1,97 @@
+{% extends 'app/base.html' %}
+
+{% block title %}Perfil de Usuario - Ventas e Intercambios{% endblock %}
+
+{% block contenido %}
+<style>
+    .report-card {
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .report-header {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #0056b3;
+        margin-bottom: 10px;
+    }
+
+    .export-btn {
+        margin-top: 20px;
+    }
+
+    .text-center{
+        color: black;
+    }
+    .form-group {
+        color: black;
+    }
+</style>
+<div class="container mt-4">
+    <h2 class="text-center">Generar Reportes</h2>
+    
+    <div class="row">
+        <!-- Reporte de Ventas -->
+        <div class="col-md-4">
+            <div class="report-card">
+                <h3 class="report-header">Reporte de Ventas</h3>
+                <form>
+                    <div class="form-group">
+                        <label for="salesStartDate">Fecha de inicio:</label>
+                        <input type="date" class="form-control" id="salesStartDate">
+                    </div>
+                    <div class="form-group">
+                        <label for="salesEndDate">Fecha de fin:</label>
+                        <input type="date" class="form-control" id="salesEndDate">
+                    </div>
+                    <button type="button" class="btn btn-primary btn-block export-btn">Exportar como PDF</button>
+                    <button type="button" class="btn btn-success btn-block export-btn">Exportar como Excel</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Reporte de Inventario -->
+        <div class="col-md-4">
+            <div class="report-card">
+                <h3 class="report-header">Reporte de Inventario</h3>
+                <form>
+                    <div class="form-group">
+                        <label for="inventoryFilter">Filtrar por:</label>
+                        <select class="form-control" id="inventoryFilter">
+                            <option value="all">Todos los productos</option>
+                            <option value="low-stock">Bajo stock</option>
+                            <option value="out-of-stock">Sin stock</option>
+                        </select>
+                    </div>
+                    <button type="button" class="btn btn-primary btn-block export-btn">Exportar como PDF</button>
+                    <button type="button" class="btn btn-success btn-block export-btn">Exportar como Excel</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Reporte de Comportamiento de Usuarios -->
+        <div class="col-md-4">
+            <div class="report-card">
+                <h3 class="report-header">Reporte de Usuarios</h3>
+                <form>
+                    <div class="form-group">
+                        <label for="userReportFilter">Filtrar por:</label>
+                        <select class="form-control" id="userReportFilter">
+                            <option value="all">Todos los usuarios</option>
+                            <option value="active">Usuarios activos</option>
+                            <option value="inactive">Usuarios inactivos</option>
+                        </select>
+                    </div>
+                    <button type="button" class="btn btn-primary btn-block export-btn">Exportar como PDF</button>
+                    <button type="button" class="btn btn-success btn-block export-btn">Exportar como Excel</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}

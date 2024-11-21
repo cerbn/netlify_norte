@@ -1,0 +1,54 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link href="{% static 'app/css/login.css' %}" rel="stylesheet"> <!-- Enlace a la hoja de estilo login.css -->
+{% endblock %}
+
+{% block contenido %}
+<style>
+    
+</style>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title text-center mb-4">Iniciar Sesión</h3>
+                    <form method="post" action="{% url 'login' %}">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="username">Nombre de Usuario</label>
+                            {{ form.username }}  <!-- Se renderiza el input directamente -->
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password">Contraseña</label>
+                            {{ form.password }}  <!-- Se renderiza el input directamente -->
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+                        </div>
+
+                        <div class="text-center mt-3">
+                            <p>No tienes una cuenta? <a href="{% url 'registro' %}">Regístrate aquí</a></p>
+                        </div>
+
+                        <div class="text-center mt-3">
+                            <p>¿Olvidaste tu contraseña? <a href="{% url 'recuperar_contraseña' %}">Recuperar contraseña</a></p>
+                        </div>
+
+                        <div class="text-center mt-3">
+                            <p>Admin <a href="{% url 'administrador' %}">Recuperar contraseña</a></p>
+                        </div>
+                        <div class="text-center mt-3">
+                            <p>google <a href="{% url "social:begin" "google-oauth2" %}">google</a></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

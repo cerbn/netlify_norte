@@ -1,0 +1,43 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+{% endblock %}
+
+{% block contenido %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+           
+            <div class="card-body">
+                <h3 class="card-title" style="color: black;">Editar Datos Personales</h3>
+                <form method="post" action="{% url 'actualizar_perfil' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="usuario_id" value="{{ user.id }}">
+                
+                    <div class="mb-3">
+                        <label for="telefono" class="form-label">Número de Teléfono</label>
+                        <input type="tel" class="form-control" id="telefono" name="telefono" value="{{ user.phone_number }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
+                        <input type="date" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" value="{{ user.birth_date }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="generoSelect" class="form-label">Género</label>
+                        <select class="form-control" id="generoSelect" name="genero">
+                            <option value="M" {% if user.gender == "M" %}selected{% endif %}>Masculino</option>
+                            <option value="F" {% if user.gender == "F" %}selected{% endif %}>Femenino</option>
+                            <option value="O" {% if user.gender == "O" %}selected{% endif %}>Otro</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-success">Guardar Cambios</button>
+                </form>
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

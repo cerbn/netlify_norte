@@ -1,0 +1,188 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link href="{% static 'app/css/registro.css' %}" rel="stylesheet"> <!-- Enlace a la hoja de estilo registro.css -->
+{% endblock %}
+
+{% block contenido %}
+<style>
+    /* Estilo para el contenedor principal */
+.container {
+    margin-top: 50px;
+}
+
+/* Personalización de la tarjeta */
+.card {
+    border: 1px solid #e0e0e0; /* Borde sutil */
+    border-radius: 10px; /* Esquinas redondeadas */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra para profundidad */
+}
+
+/* Ajustar el ancho de la tarjeta */
+.card-custom-width {
+    max-width: 600px; /* Ancho máximo de la tarjeta */
+    margin: auto; /* Centrar la tarjeta */
+}
+
+/* Estilo para los títulos */
+.card-title {
+    font-size: 1.8rem; /* Tamaño de fuente más grande */
+    font-weight: bold; /* Texto en negrita */
+}
+
+/* Estilo para las etiquetas */
+label {
+    font-size: 1rem; /* Tamaño de fuente de las etiquetas */
+    font-weight: bold; /* Negrita */
+    margin-bottom: 5px; /* Espaciado inferior */
+}
+
+/* Estilo para los inputs */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+input[type="date"],
+select {
+    width: 100%; /* Ancho completo */
+    padding: 10px; /* Espaciado interno */
+    border: 1px solid #ccc; /* Borde */
+    border-radius: 5px; /* Esquinas redondeadas */
+    margin-bottom: 15px; /* Espaciado inferior */
+    font-size: 1rem; /* Tamaño de fuente */
+}
+
+/* Estilo para el botón de registro */
+.btn-primary {
+    background-color: #007bff; /* Color del fondo */
+    border: none; /* Sin borde */
+    padding: 10px; /* Espaciado interno */
+    border-radius: 5px; /* Esquinas redondeadas */
+    font-size: 1rem; /* Tamaño de fuente */
+}
+
+/* Estilo para los botones de redes sociales */
+.btn-outline-primary,
+.btn-outline-danger {
+    width: 100%; /* Ancho completo */
+    margin-top: 10px; /* Espaciado superior */
+}
+
+/* Espaciado para los mensajes */
+.text-center p {
+    margin-top: 15px; /* Espaciado superior */
+    font-size: 0.9rem; /* Tamaño de fuente */
+}
+
+/* Personalización para iconos de redes sociales */
+.fab {
+    margin-right: 5px; /* Espaciado entre icono y texto */
+}
+
+</style>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-12 col-lg-10"> <!-- Ampliado el ancho de la columna -->
+            <div class="card card-custom-width"> <!-- Clase personalizada para ajustar el ancho -->
+
+                <div class="card-body">
+                    <h3 class="card-title text-center mb-4">Registro de Usuario</h3>
+                    <form method="post" action="{% url 'registro' %}">
+                        {% csrf_token %}
+                        <!-- Información Personal -->
+                        <div class="mb-3">
+                            <label for="username">Nombre de Usuario</label>
+                            {{ form.username }}
+                            {% if form.username.errors %}
+                                <div class="text-danger">
+                                    {{ form.username.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+
+                        <div class="mb-3">
+                            <label for="first_name">Nombre</label>
+                            {{ form.first_name }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="last_name">Apellido</label>
+                            {{ form.last_name }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email">Correo Electrónico</label>
+                            {{ form.email }}
+                            {% if form.email.errors %}
+                                <div class="text-danger">
+                                    {{ form.email.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email2">Confirmar Correo Electrónico</label>
+                            {{ form.email2 }}
+                            {% if form.email2.errors %}
+                                <div class="text-danger">
+                                    {{ form.email2.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="mb-3">
+                            <label for="birth_date">Fecha de Nacimiento</label>
+                            {{ form.birth_date }}
+                            
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="phone_number">Número de Teléfono</label>
+                            {{ form.phone_number }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="gender">Género</label>
+                            {{ form.gender }}
+                        </div>
+
+
+    
+
+                        <!-- Información de Seguridad -->
+                        <div class="mb-3">
+                            <label for="password">Contraseña</label>
+                            {{ form.password1 }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password2">Repetir Contraseña</label>
+                            {{ form.password2 }}
+                        </div>
+
+                        <!-- Botones de Registro -->
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Registrar</button>
+                        </div>
+                        <div class="text-center mt-3">
+                            <p>¿Ya tienes una cuenta? <a href="{% url 'login' %}">Inicia sesión aquí</a></p>
+                        </div>
+
+                        <!-- Opciones de Registro con Redes Sociales -->
+                        <div class="text-center mt-4">
+                            <p>O regístrate con:</p>
+                            <a href="#" class="btn btn-outline-primary">
+                                <i class="fab fa-facebook-f"></i> Facebook
+                            </a>
+                            <a href="#" class="btn btn-outline-danger ms-2">
+                                <i class="fab fa-google"></i> Google
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

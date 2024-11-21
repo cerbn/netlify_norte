@@ -1,0 +1,15 @@
+{% extends 'app/base.html' %}
+
+{% block contenido %}
+<div class="container mt-5">
+    <h1>Crear un Ticket de Soporte</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="descripcion">Descripción del Problema:</label>
+            <textarea class="form-control" id="descripcion" name="descripcion" rows="5" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">Enviar</button>
+    </form>
+</div>
+{% endblock %}

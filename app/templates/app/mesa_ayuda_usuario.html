@@ -1,0 +1,119 @@
+{% extends 'app/base.html' %}
+
+{% block title %}Mesa de Ayuda - Usuario{% endblock %}
+
+{% block contenido %}
+<style>
+    /* Estilos generales */
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        color: #000;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    h1, h2 {
+        text-align: center;
+        color: #0056b3;
+    }
+
+    h3 {
+        font-size: 1.2rem;
+        color: #000;
+    }
+
+    p {
+        font-size: 1rem;
+        color: #000;
+    }
+
+    #faq {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+    }
+
+    .faq-item {
+        background-color: #fff;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 20px;
+        width: 30%;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+
+    .faq-item:hover {
+        transform: translateY(-5px);
+    }
+
+    #contact {
+        margin-top: 50px;
+        text-align: center;
+    }
+
+    .btn-primary {
+        background-color: #0056b3;
+        color: #fff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+        font-size: 1rem;
+    }
+
+    .btn-primary:hover {
+        background-color: #003366;
+    }
+
+    @media (max-width: 768px) {
+        .faq-item {
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="container">
+    <h1>Mesa de Ayuda</h1>
+
+    <!-- Preguntas Frecuentes -->
+    <section id="faq">
+        <div class="faq-item">
+            <h3>¿Cómo puedo registrar una cuenta?</h3>
+            <p>Puedes registrarte haciendo clic en "Registrarse" en la parte superior derecha de la página principal.</p>
+        </div>
+        <div class="faq-item">
+            <h3>¿Cómo puedo restablecer mi contraseña?</h3>
+            <p>Haz clic en "¿Olvidaste tu contraseña?" en la página de inicio de sesión y sigue las instrucciones.</p>
+        </div>
+        <div class="faq-item">
+            <h3>¿Cómo puedo realizar un seguimiento de mi pedido?</h3>
+            <p>Puedes realizar el seguimiento de tu pedido desde la sección "Mis pedidos" en tu perfil.</p>
+        </div>
+        <div class="faq-item">
+            <h3>¿Qué métodos de pago aceptan?</h3>
+            <p>Aceptamos tarjetas de crédito, débito, y pagos a través de WebPay.</p>
+        </div>
+        <div class="faq-item">
+            <h3>¿Puedo devolver un libro?</h3>
+            <p>Sí, puedes devolver un libro dentro de los 30 días posteriores a la compra. Consulta nuestra política de devoluciones.</p>
+        </div>
+    </section>
+
+    <!-- Contacto con el Servicio al Cliente -->
+    <section id="contact">
+        <h2>¿Necesitas más ayuda?</h2>
+        <p>Si no encuentras la respuesta a tu pregunta, contacta a nuestro servicio al cliente.</p>
+        <a href="{% url 'crear_ticket' %}" class="btn-primary">Contactar al Servicio al Cliente</a>
+    </section>
+</div>
+{% endblock %}

@@ -1,0 +1,154 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #ffffff;
+    background-color: #1e9edf; /* Fondo claro, similar a la nieve */
+}
+
+/* Estilos para la barra de navegación */
+/* Estilos para la barra de navegación */
+.navbar {
+    background-color: #e7e7e7; /* Celeste tipo glaciar */
+    color: #000000; /* Letras negras */
+    border-bottom: 3px solid #88a0b5;
+}
+.bg-celeste {
+    background: #8360c3;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #2ebf91, #8360c3);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #2ebf91, #8360c3); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    }
+
+
+.navbar-brand {
+    font-weight: bold;
+    color: #000000; /* Letras negras */
+    font-size: 24px;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.navbar-brand:hover {
+    color: #3070a1; /* Cambia a blanco al pasar el mouse */
+    transform: scale(1.1); /* Efecto de agrandamiento */
+}
+
+.navbar-nav .nav-link {
+    color: #000000; /* Letras negras */
+}
+
+.navbar-nav .nav-link:hover {
+    color: #ffffff; /* Cambia a blanco al pasar el mouse */
+}
+
+.navbar-toggler {
+    border-color: #76c7e0; /* Celeste más claro */
+}
+
+
+/* Estilos para el formulario de búsqueda */
+.search-form .form-control {
+    border: 1px solid #88a0b5;
+    border-radius: 0;
+}
+
+.search-form .btn-outline-success {
+    border-color: rgb(168, 135, 13);
+    color: rgb(0, 0, 0);
+}
+
+.search-form .btn-outline-success:hover {
+    background-color: rgb(160, 228, 232);
+    color: rgb(15, 28, 125);
+    border-color: #6b93b2;
+}
+
+/* Estilos para el contenedor de la página */
+.container-fluid {
+    padding: 20px;
+}
+
+/* Estilos para el menú lateral */
+.sidebar {
+    background-color: #66b1c0;
+    padding: 10px;
+    color: rgb(180, 235, 249);
+}
+
+.sidebar h5 {
+    margin-bottom: 20px;
+    font-weight: bold;
+    font-size: 18px;
+    color: #7e9bb0;
+}
+
+.sidebar .list-group-item {
+    background-color: transparent;
+    border: none;
+    color: rgb(180, 235, 249);
+}
+
+.sidebar .list-group-item a {
+    color: rgb(137, 197, 199);
+    text-decoration: none;
+    padding: 10px;
+    display: block;
+}
+
+.sidebar .list-group-item a:hover {
+    background-color: #cccdce;
+    color: rgb(0, 0, 0);
+    border-radius: 4px;
+}
+
+/* Estilos para el contenido principal */
+main {
+    background-color: rgb(180, 235, 249);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos para el pie de página */
+footer {
+    background-color: #4b79a1;
+    color: rgb(11, 148, 166);
+    padding: 20px 0;
+}
+
+footer h5 {
+    margin-bottom: 15px;
+    font-weight: bold;
+    color: #1a2730;
+}
+
+footer .list-unstyled li a {
+    color: #0b7ccd;
+}
+
+footer .list-unstyled li a:hover {
+    color: rgb(169, 209, 213);
+    text-decoration: underline;
+}
+
+footer .text-center {
+    margin-top: 10px;
+    color: #0f1215;
+}
+
+footer .text-center p {
+    margin: 0;
+}
+
+/* Ajustes para pantallas pequeñas */
+@media (max-width: 768px) {
+    .sidebar {
+        margin-bottom: 20px;
+    }
+
+    main {
+        padding: 15px;
+    }
+
+    .navbar {
+        border-bottom: none;
+    }
+}

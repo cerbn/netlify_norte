@@ -1,0 +1,20 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block contenido %}
+<div class="container mt-5">
+    <h2 class="mb-4">Responder al Problema #{{ problema.id }}</h2>
+
+    <p><strong>Descripción:</strong> {{ problema.descripcion }}</p>
+
+    <!-- Formulario para responder -->
+    <form action="{% url 'responder_problema' problema.id %}" method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="respuesta">Respuesta:</label>
+            <textarea class="form-control" id="respuesta" name="respuesta" rows="4" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">Enviar Respuesta</button>
+    </form>
+</div>
+{% endblock %}

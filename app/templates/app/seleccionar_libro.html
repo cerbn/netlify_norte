@@ -1,0 +1,142 @@
+{% extends 'app/base.html' %}
+
+
+
+{% block contenido %}
+<style>
+    /* General */
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+        color: #333;
+        margin: 0;
+        padding: 0;
+    }
+    
+    .container {
+        max-width: 800px;
+        margin: 40px auto;
+        background-color: #ffffff;
+        border-radius: 10px;
+        padding: 20px 30px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Título */
+    h2 {
+        text-align: center;
+        color: #2F80ED;
+        margin-bottom: 20px;
+        font-size: 1.8rem;
+    }
+    
+    /* Tabla */
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+    }
+    
+    .table th, .table td {
+        text-align: left;
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+    }
+    
+    .table th {
+        background-color: #2F80ED;
+        color: #fff;
+        text-transform: uppercase;
+        font-size: 0.9rem;
+    }
+    
+    .table tr:hover {
+        background-color: #f1f1f1;
+    }
+    
+    .table input[type="radio"] {
+        transform: scale(1.2);
+        cursor: pointer;
+    }
+    
+    /* Botones */
+    .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-size: 1rem;
+        text-align: center;
+        text-decoration: none;
+        margin: 10px 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    
+    .btn-primary {
+        background-color: #28a745;
+        color: #ffffff;
+        border: none;
+    }
+    
+    .btn-primary:hover {
+        background-color: #218838;
+    }
+    
+    .btn-secondary {
+        background-color: #6c757d;
+        color: #ffffff;
+        border: none;
+    }
+    
+    .btn-secondary:hover {
+        background-color: #5a6268;
+    }
+    
+    /* Responsivo */
+    @media (max-width: 768px) {
+        .container {
+            padding: 15px;
+        }
+    
+        h2 {
+            font-size: 1.5rem;
+        }
+    
+        .btn {
+            width: 100%;
+            margin: 10px 0;
+        }
+    }
+    </style>
+    
+    <div class="container">
+        <h2>Selecciona un libro del usuario solicitante</h2>
+        <form method="POST" action="{% url 'seleccionar_libro' solicitud.id %}">
+            {% csrf_token %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Título</th>
+                        <th>Autor</th>
+                        <th>Seleccionar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for libro in catalogo %}
+                    <tr>
+                        <td>{{ libro.titulo }}</td>
+                        <td>{{ libro.autor.nombre }}</td>
+                        <td>
+                            <input type="radio" name="libro_seleccionado" value="{{ libro.id }}">
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <button type="submit" class="btn btn-primary">Confirmar Selección</button>
+            <a href="{% url 'gestionar_solicitudes' %}" class="btn btn-secondary">Cancelar</a>
+        </form>
+    </div>
+
+
+{% endblock %}

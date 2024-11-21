@@ -1,0 +1,182 @@
+{% extends 'app/base.html' %}
+{% block contenido %}
+<style>
+    /* General */
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+        color: #333;
+        margin: 0;
+        padding: 0;
+    }
+    
+    .container {
+        max-width: 900px;
+        margin: 40px auto;
+        background-color: #ffffff;
+        border-radius: 10px;
+        padding: 20px 30px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Títulos */
+    h2, h3 {
+        color: #2F80ED;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    
+    h2 {
+        font-size: 1.8rem;
+    }
+    
+    h3 {
+        font-size: 1.4rem;
+    }
+    
+    /* Texto general */
+    p {
+        font-size: 1rem;
+        margin-bottom: 15px;
+        color: #555;
+    }
+    
+    strong {
+        color: #000;
+    }
+    
+    /* Tabla */
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background-color: #fafafa;
+    }
+    
+    .table th, .table td {
+        text-align: left;
+        padding: 12px;
+        border: 1px solid #ddd;
+    }
+    
+    .table th {
+        background-color: #2F80ED;
+        color: #fff;
+        text-transform: uppercase;
+        font-size: 0.9rem;
+    }
+    
+    .table td {
+        font-size: 0.95rem;
+    }
+    
+    .table tr:hover {
+        background-color: #f1f1f1;
+    }
+    
+    .table input[type="radio"] {
+        transform: scale(1.2);
+        cursor: pointer;
+    }
+    
+    /* Botones */
+    .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-size: 1rem;
+        text-align: center;
+        text-decoration: none;
+        margin: 10px 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    
+    .btn-success {
+        background-color: #28a745;
+        color: #ffffff;
+        border: none;
+    }
+    
+    .btn-success:hover {
+        background-color: #218838;
+    }
+    
+    .btn-danger {
+        background-color: #dc3545;
+        color: #ffffff;
+        border: none;
+    }
+    
+    .btn-danger:hover {
+        background-color: #c82333;
+    }
+    
+    /* Mensaje vacío */
+    .text-center {
+        text-align: center;
+        font-style: italic;
+        color: #777;
+    }
+    
+    /* Responsivo */
+    @media (max-width: 768px) {
+        .container {
+            padding: 15px;
+        }
+    
+        h2 {
+            font-size: 1.5rem;
+        }
+    
+        h3 {
+            font-size: 1.3rem;
+        }
+    
+        .btn {
+            width: 100%;
+            margin: 10px 0;
+        }
+    }
+    </style>
+    
+<div class="container mt-5">
+    <h2>Procesar Solicitud de Intercambio</h2>
+    <p>Libro solicitado: <strong>{{ solicitud.libro.titulo }}</strong></p>
+    <p>Solicitante: <strong>{{ solicitud.solicitante.username }}</strong></p>
+
+    <h3>Catálogo del usuario solicitante</h3>
+    <form method="post" action="{% url 'procesar_solicitud' solicitud.id %}">
+        {% csrf_token %}
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Título</th>
+                    <th>Autor</th>
+                    <th>Seleccionar</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for libro in catalogo %}
+                <tr>
+                    <td>{{ libro.id }}</td>
+                    <td>{{ libro.titulo }}</td>
+                    <td>{{ libro.autor.nombre }}</td>
+                    <td>
+                        <input type="radio" name="libro_seleccionado" value="{{ libro.id }}">
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center">No hay libros disponibles para intercambio.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button type="submit" class="btn btn-success">Aceptar</button>
+        <a href="{% url 'home' %}" class="btn btn-danger">Rechazar</a>
+    </form>
+</div>
+
+{% endblock %}

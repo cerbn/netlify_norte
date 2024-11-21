@@ -1,0 +1,142 @@
+{% extends 'app/base.html' %}
+
+
+
+{% block sidebar %}
+<div class="card mb-3">
+    <div class="card-header">
+        Mis Ventas
+    </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item"><a href="#">Mis Productos en Venta</a></li>
+        <li class="list-group-item"><a href="#">Registrar Nuevo Producto</a></li>
+    </ul>
+</div>
+<div class="card mb-3">
+    <div class="card-header">
+        Intercambios
+    </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item"><a href="#">Mis Libros para Intercambio</a></li>
+        <li class="list-group-item"><a href="#">Registrar Libro para Intercambio</a></li>
+    </ul>
+</div>
+<div class="card mb-3">
+    <div class="card-header">
+        Mi Cuenta
+    </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item"><a href="#">Editar Perfil</a></li>
+        <li class="list-group-item"><a href="#">Cambiar Contraseña</a></li>
+        <li class="list-group-item"><a href="#">Direcciones</a></li>
+    </ul>
+</div>
+{% endblock %}
+
+{% block contenido %}
+        <!-- Contenido Principal -->
+        <div class="col-md-9">
+            <!-- Sección de Registrar Producto -->
+            <div class="card mb-4">
+                <div class="card-header" style="color: black;">
+                    Registrar Nuevo Producto
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="isbn" class="form-label">ISBN</label>
+                            <input type="text" class="form-control" id="titulo" name="isbn" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="titulo" class="form-label">Título del Libro</label>
+                            <input type="text" class="form-control" id="titulo" name="titulo" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <select class="form-control" id="comunaSelect" name="autor" required>
+                                <option value="">Seleccionar Autor</option>
+                                {% for a in autor %}
+                                    <option value="{{ a.id }}">
+                                        {{ a.nombre }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="descripcion" class="form-label">Descripción</label>
+                            <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="categoria" class="form-label">Categoría</label>
+                            <select class="form-select" id="categoria" name="categoria" required>
+
+                                {% for c in categoria %}
+
+                                <option value="{{ c.id }}">{{ c.nombre }}</option>
+                                {% endfor %}
+
+                                <!-- Agregar más categorías según sea necesario -->
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="precio" class="form-label">Precio (CLP)</label>
+                            <input type="number" class="form-control" id="precio" name="precio" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Registrar Producto</button>
+                    </form>
+                    
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    Mis Libros para Intercambio
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Título</th>
+                                    <th>Autor</th>
+                                    <th>Precio</th>
+                                    <th>Estado solicitud</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if libros %}
+                                    {% for libro in libros %}
+                                    <tr>
+                                        <td>{{ libro.titulo }}</td>
+                                        <td>{{ libro.autor.nombre }}</td>
+                                        <td>{{ libro.precio }}</td>
+                                        <td>{{ libro.solicitud }}</td>
+                                        <td>
+                                            <a href="#" class="btn btn-sm btn-danger">Eliminar</a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr>
+                                        <td colspan="4">No tienes libros registrados para intercambio.</td>
+                                    </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}
+
+
+

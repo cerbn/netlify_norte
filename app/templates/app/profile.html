@@ -1,0 +1,468 @@
+{% extends 'app/base.html' %}
+
+
+
+{% block sidebar %}
+<div class="card mb-3">
+    <div class="card-header">
+        Mis Ventas
+    </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item"><a href="#">Mis Productos en Venta</a></li>
+        <li class="list-group-item"><a href="#">Registrar Nuevo Producto</a></li>
+    </ul>
+</div>
+<div class="card mb-3">
+    <div class="card-header">
+        Intercambios
+    </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item"><a href="#">Mis Libros para Intercambio</a></li>
+        <li class="list-group-item"><a href="#">Registrar Libro para Intercambio</a></li>
+    </ul>
+</div>
+<div class="card mb-3">
+    <div class="card-header">
+        Mi Cuenta
+    </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item"><a href="#">Editar Perfil</a></li>
+        <li class="list-group-item"><a href="#">Cambiar Contraseña</a></li>
+        <li class="list-group-item"><a href="#">Direcciones</a></li>
+    </ul>
+</div>
+{% endblock %}
+
+{% block contenido %}
+
+
+
+    <style>/* base.css */
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #ffffff;
+            background-color: #1e9edf; /* Fondo claro, similar a la nieve */
+        }
+
+        /* Estilos para la barra de navegación */
+        /* Estilos para la barra de navegación */
+        .navbar {
+            background-color: #e7e7e7; /* Celeste tipo glaciar */
+            color: #000000; /* Letras negras */
+            border-bottom: 3px solid #88a0b5;
+        }
+        .bg-celeste {
+        background-color: #037485 !important; /* Celeste tipo glaciar */
+        }
+
+
+        .navbar-brand {
+            font-weight: bold;
+            color: #000000; /* Letras negras */
+            font-size: 24px;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        .navbar-brand:hover {
+            color: #b5b5b5; /* Cambia a blanco al pasar el mouse */
+            transform: scale(1.1); /* Efecto de agrandamiento */
+        }
+
+        .navbar-nav .nav-link {
+            color: #000000; /* Letras negras */
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: #ffffff; /* Cambia a blanco al pasar el mouse */
+        }
+
+        .navbar-toggler {
+            border-color: #76c7e0; /* Celeste más claro */
+        }
+
+
+        /* Estilos para el formulario de búsqueda */
+        .search-form .form-control {
+            border: 1px solid #88a0b5;
+            border-radius: 0;
+        }
+
+        .search-form .btn-outline-success {
+            border-color: rgb(168, 135, 13);
+            color: rgb(0, 0, 0);
+        }
+
+        .search-form .btn-outline-success:hover {
+            background-color: rgb(160, 228, 232);
+            color: rgb(15, 28, 125);
+            border-color: #6b93b2;
+        }
+
+        /* Estilos para el contenedor de la página */
+        .container-fluid {
+            padding: 20px;
+        }
+
+        /* Estilos para el menú lateral */
+        .sidebar {
+            background-color: #66b1c0;
+            padding: 10px;
+            color: rgb(180, 235, 249);
+        }
+
+        .sidebar h5 {
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 18px;
+            color: #7e9bb0;
+        }
+
+        .sidebar .list-group-item {
+            background-color: transparent;
+            border: none;
+            color: rgb(180, 235, 249);
+        }
+
+        .sidebar .list-group-item a {
+            color: rgb(0, 0, 0);
+            text-decoration: none;
+            padding: 10px;
+            display: block;
+        }
+
+        .sidebar .list-group-item a:hover {
+            background-color: #fbfbfb;
+            color: rgb(0, 0, 0);
+            border-radius: 4px;
+        }
+
+        /* Estilos para el contenido principal */
+        main {
+            background-color: rgb(180, 235, 249);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Estilos para el pie de página */
+        footer {
+            background-color: #4b79a1;
+            color: rgb(11, 148, 166);
+            padding: 20px 0;
+        }
+
+        footer h5 {
+            margin-bottom: 15px;
+            font-weight: bold;
+            color: #1a2730;
+        }
+
+        footer .list-unstyled li a {
+            color: #0b7ccd;
+        }
+
+        footer .list-unstyled li a:hover {
+            color: rgb(169, 209, 213);
+            text-decoration: underline;
+        }
+
+        footer .text-center {
+            margin-top: 10px;
+            color: #0f1215;
+        }
+
+        footer .text-center p {
+            margin: 0;
+        }
+
+        /* Ajustes para pantallas pequeñas */
+        @media (max-width: 768px) {
+            .sidebar {
+                margin-bottom: 20px;
+            }
+
+            main {
+                padding: 15px;
+            }
+
+            .navbar {
+                border-bottom: none;
+            }
+        }
+        </style>
+
+
+        <!-- Contenido Principal -->
+        <div class="col-md-9">
+            <!-- Sección de Registrar Producto -->
+            <div class="card mb-4">
+                <div class="card-header" style="color: black;">
+                    Registrar Nuevo Producto
+                    <div class="container mt-5">
+                        <h3 class="card-title text-center mb-4" style="color: black;" >Datos personales</h3>
+                        
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title" style="color: black;">Nombre Completo</h5>
+                    <p class="card-text">{{ user.first_name }} {{ user.last_name }}</p>  <!-- Nombre completo -->
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title" style="color: black;">Correo Electrónico</h5>
+                    <p class="card-text">{{ user.email }}</p>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title" style="color: black;">Número de Teléfono</h5>
+                    <p class="card-text">{{ usuarios.phone_number }}</p>  <!-- Número de teléfono -->
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title" style="color: black;">Fecha de Nacimiento</h5>
+                    <p class="card-text">{{ usuarios.birth_date }}</p>  <!-- Fecha de nacimiento -->
+                </div>
+            </div>
+            <button class="btn btn-primary" id="update-info-btn">Actualizar Información</button>
+        </div>
+    </div>
+</div>
+
+    <!-- Formulario para actualizar información -->
+    <div id="update-info-form" class="card mb-4" style="display: none;">
+        <div class="card-header bg-celeste" style="color: white;">
+            Actualizar Información del Usuario
+        </div>
+        <div class="card-body">
+            <h3 class="card-title" style="color: black;">Editar Datos Personales</h3>
+            <form method="post" action="{% url 'actualizar_user' %}">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="nombre" class="form-label" style="color: black;">Nombre Completo</label>
+                    <input type="text" class="form-control" id="nombre" name="nombre" value="{{ user.first_name }}">
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label" style="color: black;">Correo Electrónico</label>
+                    <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}">
+                </div>
+                <div class="mb-3">
+                    <label for="telefono" class="form-label" style="color: black;">Número de Teléfono</label>
+                    <input type="tel" class="form-control" id="telefono" name="telefono" value="{{ user.phone_number }}">
+                </div>
+                <div class="mb-3">
+                    <label for="fecha_nacimiento" class="form-label" style="color: black;">Fecha de Nacimiento</label>
+                    <input type="date" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" value="{{ user.birth_date }}">
+                </div>
+                <button type="submit" class="btn btn-success">Guardar Cambios</button>
+                <button type="button" class="btn btn-secondary" id="cancel-update-btn">Cancelar</button>
+            </form>
+        </div>
+    </div>
+</div>
+        
+
+
+
+
+
+
+
+        
+        <div class="mt-4">
+            <h4 style="color: black;">Registrar Dirección</h4>
+
+            {% if direcciones %}
+            <!-- Si hay direcciones, mostrar la información de la dirección -->
+            <div class="card" id="direccionCard">
+                <div class="card-body">
+                    <h5 class="card-title">Dirección Registrada</h5>
+                    <p><strong>Destinatario:</strong> {{ direcciones.destinatario }}</p>
+                    <p><strong>Calle:</strong> {{ direcciones.calle }}</p>
+                    <p><strong>Número:</strong> {{ direcciones.numero }}</p>
+                    <p><strong>Región:</strong> {{ direcciones.region.nombre }}</p>
+                    <p><strong>Comuna:</strong> {{ direcciones.comuna.nombre }}</p>
+                    <!-- Botón para mostrar el formulario de actualización -->
+                    <button id="updateAddressBtn" class="btn btn-warning">Actualizar Dirección</button>
+                </div>
+            </div>
+
+            <!-- Formulario de actualización oculto inicialmente -->
+            <div id="updateAddressForm" style="display: none;">
+                <form method="POST" action="{% url 'actualizar_direccion' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="direccion_id" value="{{ direcciones.usuario }}">
+
+                    <div class="mb-3">
+                        <select class="form-control" id="regionSelect" name="region_id" required>
+                            <option value="">Seleccionar Región</option>
+                            {% for region in regiones %}
+                                <option value="{{ region.id }}" {% if region.id == direccion.region.id %}selected{% endif %}>
+                                    {{ region.nombre }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <!-- Comuna -->
+                        <select class="form-control" id="comunaSelect" name="comuna_id" required>
+                            <option value="">Seleccionar Comuna</option>
+                            {% for comuna in comunas %}
+                                <option value="{{ comuna.id }}" {% if comuna.id == direccion.comuna.id %}selected{% endif %}>
+                                    {{ comuna.nombre }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Destinatario -->
+                    <div class="mb-3">
+                        <label for="destinatario" class="form-label">Destinatario *</label>
+                        <input type="text" class="form-control" id="destinatario" name="destinatario" value="{{ direcciones.destinatario }}" required>
+                    </div>
+
+                    <!-- Calle -->
+                    <div class="mb-3">
+                        <label for="calle" class="form-label">Calle *</label>
+                        <input type="text" class="form-control" id="calle" name="calle" value="{{ direcciones.calle }}" required>
+                    </div>
+
+                    <!-- Número -->
+                    <div class="mb-3">
+                        <label for="numero" class="form-label">Número</label>
+                        <input type="text" class="form-control" id="numero" name="numero" value="{{ direcciones.numero }}">
+                    </div>
+
+                    <!-- Datos adicionales -->
+                    <div class="mb-3">
+                        <label for="datos_adicionales" class="form-label">Datos adicionales</label>
+                        <textarea class="form-control" id="datos_adicionales" name="datos_adicionales">{{ direcciones.datos_adicionales }}</textarea>
+                    </div>
+
+                    <!-- Botón de Guardar -->
+                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                </form>
+            </div>
+            {% else %}
+            <!-- Si no hay direcciones, mostrar el formulario de registro -->
+            <form id="direccionForm" method="POST" action="{% url 'registrar_direccion' %}">
+                {% csrf_token %}
+                <input type="hidden" name="usuario_id" value="{{ user.id }}">
+
+                <!-- Región -->
+                <div class="mb-3">
+                    <label for="regionSelect" class="form-label">Provincia o Región *</label>
+                    <select class="form-control" id="regionSelect" name="region_id" required>
+                        <option value="">Seleccionar Región</option>
+                        {% for region in regiones %}
+                            <option value="{{ region.id }}">{{ region.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+
+
+
+
+
+
+
+                <!-- Comuna -->
+                <div class="mb-3">
+                    <label for="comunaSelect" class="form-label">Comuna *</label>
+                    <select class="form-control" id="comunaSelect" name="comuna_id" required>
+                        <option value="">Seleccionar Comuna</option>
+                        <!-- Debes agregar un script aquí para llenar las comunas según la región seleccionada -->
+                    </select>
+                </div>
+
+                <!-- Destinatario -->
+                <div class="mb-3">
+                    <label for="destinatario" class="form-label">Destinatario *</label>
+                    <input type="text" class="form-control" id="destinatario" name="destinatario" required>
+                </div>
+
+                <!-- Calle -->
+                <div class="mb-3">
+                    <label for="calle" class="form-label">Calle *</label>
+                    <input type="text" class="form-control" id="calle" name="calle" required>
+                </div>
+
+                <!-- Número -->
+                <div class="mb-3">
+                    <label for="numero" class="form-label">Número</label>
+                    <input type="text" class="form-control" id="numero" name="numero">
+                </div>
+
+                <!-- Datos adicionales -->
+                <div class="mb-3">
+                    <label for="datos_adicionales" class="form-label">Datos adicionales</label>
+                    <textarea class="form-control" id="datos_adicionales" name="datos_adicionales"></textarea>
+                </div>
+
+                <!-- Botón de Guardar -->
+                <button type="submit" class="btn btn-primary">Guardar Dirección</button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.getElementById('regionSelect').addEventListener('change', function() {
+        const regionId = this.value;
+        
+        // Hacemos la solicitud al servidor para obtener las comunas de la región seleccionada
+        fetch(`/api/comunas/${regionId}`)
+            .then(response => response.json())
+            .then(data => {
+                const comunaSelect = document.getElementById('comunaSelect');
+                comunaSelect.innerHTML = ''; // Limpiar las opciones previas
+
+                if (data.length > 0) {
+                    data.forEach(comuna => {
+                        const option = document.createElement('option');
+                        option.value = comuna.id;
+                        option.textContent = comuna.nombre;
+                        comunaSelect.appendChild(option);
+                    });
+                } else {
+                    const option = document.createElement('option');
+                    option.value = '';
+                    option.textContent = 'No hay comunas disponibles';
+                    comunaSelect.appendChild(option);
+                }
+            })
+            .catch(error => console.error('Error al obtener las comunas:', error));
+    });
+</script>
+</body>
+
+
+<script>
+    document.getElementById('update-info-btn').addEventListener('click', function() {
+        document.getElementById('update-info-form').style.display = 'block';  // Mostrar formulario
+    });
+
+    document.getElementById('cancel-update-btn').addEventListener('click', function() {
+        document.getElementById('update-info-form').style.display = 'none';  // Ocultar formulario
+    });
+
+</script>
+
+<script>
+    document.getElementById('updateAddressBtn').addEventListener('click', function() {
+    document.getElementById('direccionCard').style.display = 'none';  // Ocultar tarjeta
+    document.getElementById('updateAddressForm').style.display = 'block';  // Mostrar formulario
+});
+
+</script>
+
+{% endblock %}
+

@@ -1,0 +1,158 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block contenido %}
+<style>
+.container {
+    max-width: 600px;
+    width: 100%;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+h1 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #4a4a4a;
+}
+
+/* Estilos del formulario */
+.form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form-group {
+    text-align: left;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #666;
+}
+
+input[type="text"],
+input[type="file"],
+select,
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+input[type="file"] {
+    padding: 5px;
+}
+
+textarea {
+    resize: vertical;
+}
+
+.btn {
+    padding: 10px 20px;
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #45a049;
+}
+</style>
+
+<div class="container">
+    <h1>Editar Libro</h1>
+    <form method="POST" enctype="multipart/form-data" class="form-container">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        
+        <div class="form-group">
+            <label for="titulo">Título</label>
+            {{ form.titulo }}
+        </div>
+        
+        <div class="form-group">
+            <label for="isbn">ISBN</label>
+            {{ form.isbn }}
+        </div>
+
+        <div class="form-group">
+            <label for="autor">Autor</label>
+            {{ form.autor }}
+        </div>
+
+        <div class="form-group">
+            <label for="categoria">Categoría</label>
+            {{ form.categoria }}
+        </div>
+
+        <div class="form-group">
+            <label for="descripcion">Descripción</label>
+            {{ form.descripcion }}
+        </div>
+
+        <div class="form-group">
+            <label for="precio">Precio</label>
+            {{ form.precio }}
+        </div>
+
+        <div class="form-group">
+            <label for="stock">Stock</label>
+            {{ form.stock }}
+        </div>
+        
+        <div class="form-group">
+            <label for="formato">Formato</label>
+            {{ form.formato }}
+        </div>
+
+        <div class="form-group">
+            <label for="idioma">Idioma</label>
+            {{ form.idioma }}
+        </div>
+
+        <div class="form-group">
+            <label for="num_paginas">Numero de paginas</label>
+            {{ form.num_paginas }}
+        </div>
+        <div class="form-group">
+            <label for="encuadernacion">encuadernacion</label>
+            {{ form.encuadernacion }}
+        </div>
+        <div class="form-group">
+            <label for="dimensiones">dimensiones</label>
+            {{ form.dimensiones }}
+        </div>
+
+        <div class="form-group">
+            <label for="imagen">Imagen</label>
+            {% if libro.imagen_url %}
+                <img src="{{ libro.imagen_url }}" alt="{{ libro.titulo }}" class="img-preview">
+                <label class="change-image-btn">
+                    Cambiar Imagen
+                    <input type="file" name="imagen" style="display: none;">
+                </label>
+                <button type="submit" name="eliminar_imagen" class="btn btn-danger mt-2">Eliminar Imagen</button>
+            {% else %}
+                {{ form.imagen }}
+            {% endif %}
+        </div>
+        
+
+        <button type="submit" class="btn">Guardar</button>
+    </form>
+</div>
+{% endblock %}

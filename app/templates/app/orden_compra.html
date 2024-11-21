@@ -1,0 +1,104 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link href="{% static 'app/css/orden_compra.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block contenido %}
+<style>
+    .order-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Hace que el contenedor ocupe toda la altura de la pantalla */
+}
+
+.order-container {
+    background-color: #ffffff;
+    padding: 100px;
+    border-radius: 50px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    width: 100%;
+    text-align: center;
+    box-sizing: border-box;
+}
+h1 {
+    color: #4CAF50;
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+p {
+    font-size: 1.2em;
+    color: #333;
+    margin: 10px 0;
+}
+
+h2 {
+    font-size: 1.5em;
+    color: #333;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin-top: 10px;
+}
+
+ul li {
+    font-size: 1.2em;
+    color: #555;
+    margin: 5px 0;
+}
+
+strong {
+    color: #333;
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    .order-container {
+        padding: 20px;
+        width: 90%;
+    }
+
+    h1 {
+        font-size: 1.8em;
+    }
+
+    h2 {
+        font-size: 1.3em;
+    }
+
+    p, ul li {
+        font-size: 1em;
+    }
+}
+
+</style>
+<div class="order-wrapper">
+    <div class="order-container">
+        <h1>¡Gracias por tu compra!</h1>
+        <p>Número de orden: <strong>#{{ pedido_id_item }}</strong></p>
+
+        <h2>Detalles del envío</h2>
+        <p>Nombre del destinatario: {{ direccion_envio_item.destinatario }}</p>
+        <p>Dirección de envío: {{ direccion_envio_item.calle }}, {{ direccion_envio_item.numero }}, {{ direccion_envio_item.comuna.nombre }}, {{ direccion_envio_item.region.nombre }}</p>
+        <p>Teléfono de contacto: {{ usuarios.phone_number }}</p>
+
+        <h2>Detalles del pedido</h2>
+        <ul>
+            {% for item in libro_item %}
+                <li>{{ item.libro.titulo }} - ${{ item.precio_total_item }}</li>
+            {% endfor %}
+            <li><strong>Total: ${{ pedido.precio_total_item }}</strong></li>
+        </ul>
+    </div>
+</div>
+
+
+{% endblock %}

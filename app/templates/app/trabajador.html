@@ -1,0 +1,956 @@
+{% extends 'app/base.html' %}
+{% block sidebar %}
+
+<div class="card mb-3">
+    <div class="card-header">Agregar</div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item"><a href="#" onclick="showSection('Libro_usuario')">Libro para intercambio</a></li>
+        <li class="list-group-item"><a href="#" onclick="showSection('Libro_catalogo')">Libro al caralogo</a></li>
+        {% if request.user.is_superuser %}
+
+        <li class="list-group-item"><a href="#" onclick="showSection('Usuario')">Nuevo usuario</a></li>
+        {% endif %}
+
+    </ul>
+</div>
+<div class="card mb-3">
+    <div class="card-header">Editar</div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item"><a href="#" onclick="showSection('editar_libro_usuario')">Editar libro usuario</a></li>
+        <li class="list-group-item"><a href="#" onclick="showSection('editar_libro_catalogo')">Editar libro catalogo</a></li>
+        {% if request.user.is_superuser %}
+
+        <li class="list-group-item"><a href="#" onclick="showSection('editar_usuario')">Editar usuario</a></li>
+        {% endif %}
+        <li class="list-group-item"><a href="#" onclick="showSection('editar_usuario')">Editar usuario</a></li>
+
+    </ul>
+</div>
+{% endblock %}
+{% block contenido %}
+<style>
+/* General */
+/* Formularios CRUD */
+form.crud-form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+    max-width: 600px;
+}
+
+form.crud-form input,
+form.crud-form select,
+form.crud-form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+/* Tablas */
+.table-container {
+    margin: 20px auto;
+    max-width: 1200px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th {
+    background-color: #007bff;
+    color: white;
+    padding: 10px;
+}
+
+.table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+/* Estilo del Navbar */
+.navbar {
+    background-color: #d3d3d3 !important;
+}
+
+.navbar .nav-link {
+    font-size: 16px;
+}
+
+.navbar .nav-link:hover {
+    color: #00c0e2 !important;
+}
+
+.navbar .navbar-brand {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.navbar .navbar-brand:hover {
+    color: #005260;
+}
+
+.navbar .dropdown-menu {
+    background-color: #007bff;
+}
+
+.navbar .dropdown-menu .dropdown-item {
+    color: #3f0000;
+}
+
+.navbar .dropdown-menu .dropdown-item:hover {
+    background-color: #0056b3;
+}
+/* Títulos */
+h1, h2, h3 {
+    color: #444;
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Formularios */
+form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+    max-width: 600px;
+    font-size: 16px;
+}
+
+/* Labels */
+form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+}
+
+/* Inputs y Selects */
+form input[type="text"],
+form input[type="email"],
+form input[type="number"],
+form input[type="date"],
+form input[type="password"],
+form textarea,
+form select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #333;
+}
+
+/* Inputs de tipo checkbox y radio */
+form input[type="checkbox"],
+form input[type="radio"] {
+    margin-right: 10px;
+}
+
+/* Botones */
+form button {
+    display: inline-block;
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+form button:hover {
+    background-color: #0056b3;
+}
+
+/* Botones secundarios */
+form button.btn-secondary {
+    background-color: #6c757d;
+}
+
+form button.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+/* Tablas */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 16px;
+    text-align: left;
+}
+
+table th, table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+table th {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+}
+
+table tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+table tbody tr:hover {
+    background-color: #e9ecef;
+}
+
+/* Mensajes de retroalimentación */
+.alert {
+    padding: 15px;
+    margin: 20px auto;
+    max-width: 600px;
+    border-radius: 4px;
+    font-size: 16px;
+    text-align: center;
+}
+
+.alert-info {
+    background-color: #d9edf7;
+    color: #31708f;
+}
+
+/* Paginación */
+.pagination {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+}
+
+.pagination li {
+    margin: 0 5px;
+}
+
+.pagination a {
+    display: block;
+    padding: 10px 15px;
+    color: #007bff;
+    text-decoration: none;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.pagination a:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+.pagination .active span {
+    display: block;
+    padding: 10px 15px;
+    color: white;
+    background-color: #007bff;
+    border: 1px solid #007bff;
+    border-radius: 4px;
+}
+
+/* Secciones ocultas */
+.form-section {
+    display: none;
+    background-color: #fff;
+    padding: 20px;
+    margin: 20px auto;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+}
+
+/* Botones de acción */
+.btn {
+    display: inline-block;
+    padding: 10px 15px;
+    font-size: 14px;
+    border-radius: 4px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.btn-warning {
+    background-color: #ffc107;
+    color: #fff;
+}
+
+.btn-warning:hover {
+    background-color: #e0a800;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+</style>
+
+
+<div class="col-md-9">
+
+    <!-- Registrar Nuevo Producto -->
+    <div id="Libro_usuario" class="content-section">
+   <!-- CRUD para LVentaU -->
+        <h2 class="section-header">Gestionar LVentaU</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ lventau_form.as_p }}
+            <button type="submit" name="crear_lventau" class="btn btn-primary">Crear Nuevo LVentaU</button>
+        </form>
+    </div>
+
+
+
+    <!-- --------------------------------Mis Libros para Intercambio ----------------------------------------------------------->
+
+
+    <div id="Libro_catalogo" class="content-section" style="display: none;">
+        <h2 class="section-header">Gestionar Libros</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ libro_form.as_p }}
+            <button type="submit" name="crear_libro" class="btn btn-primary">Crear Nuevo Libro</button>
+        </form>
+    </div>
+
+
+<!-- Solicitudes Enviadas -->
+<div id="Usuario" class="content-section" style="display: none;">
+    <h2 class="section-header">Gestionar Usuarios</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ usuario_form.as_p }}
+        <button type="submit" name="crear_usuario" class="btn btn-primary">Crear Nuevo Usuario</button>
+    </form>
+</div>
+
+
+
+
+
+    <!-- Solicitudes de Intercambio Recibidas -->
+<div id="editar_libro_usuario" class="content-section" style="display: none;">
+
+    <div class="table-container">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Título</th>
+                    <th>Precio</th>
+                    <th>Usuario</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for lventau in lventau_page %}
+                <tr>
+                    <td>{{ lventau.id }}</td>
+                    <td>{{ lventau.titulo }}</td>
+                    <td>{{ lventau.solicitud }}</td>
+                    <td>{{ lventau.usuario.username }}</td>
+                    <td>
+                        <button class="btn btn-warning btn-sm" onclick="loadEditLVentaU(this)"
+                        data-id="{{ lventau.id }}"
+                        data-isbn="{{ lventau.isbn|default:'' }}"
+                        data-titulo="{{ lventau.titulo|default:'' }}"
+                        {% if libro.autor %}
+                                data-autor="{{ libro.autor.id }}"
+                            {% else %}
+                                data-autor=""
+                            {% endif %}
+                            {% if libro.categoria %}
+                                data-categoria="{{ libro.categoria.id }}"
+                            {% else %}
+                                data-categoria=""
+                            {% endif %}
+                        data-precio="{{ lventau.precio|default:'' }}"
+                        data-stock="{{ lventau.stock|default:'' }}"
+                        data-estado="{{ lventau.estado|default:'' }}"
+                        data-descripcion="{{ lventau.descripcion|default:'' }}"
+                        data-solicitud="{{ lventau.solicitud|default:'' }}"
+                        {% if lventau.usuario %}
+                        data-usuario="{{ lventau.usuario.id }}"
+                        {% else %}
+                        data-usuario=""
+                        {% endif %}
+                        data-tipo-registro="{{ lventau.tipo_registro|default:'' }}"
+                        data-imagen-url="{{ lventau.imagen_url|default:'' }}">
+                        Editar
+                    </button>
+          
+                        <form method="post" style="display:inline-block;">
+                            {% csrf_token %}
+                            <input type="hidden" name="lventau_id" value="{{ lventau.id }}">
+                            <button type="submit" name="eliminar_lventau" class="btn btn-danger btn-sm">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Paginación -->
+        <nav>
+            <ul class="pagination">
+                {% if lventau_page.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page_lventau={{ lventau_page.previous_page_number }}">Anterior</a></li>
+                {% endif %}
+                <li class="page-item active"><span class="page-link">{{ lventau_page.number }}</span></li>
+                {% if lventau_page.has_next %}
+                <li class="page-item"><a class="page-link" href="?page_lventau={{ lventau_page.next_page_number }}">Siguiente</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Formulario para editar LVentaU -->
+    <div class="form-section" id="edit-lventau-section" style="display:none;">
+        <h3>Editar LVentaU</h3>
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="lventau_id" id="edit-lventau-id">
+
+            <!-- ISBN -->
+            <div class="mb-3">
+                <label for="edit-lventau-isbn" class="form-label">ISBN</label>
+                <input type="text" name="isbn" id="edit-lventau-isbn" class="form-control">
+            </div>
+
+            <!-- Título -->
+            <div class="mb-3">
+                <label for="edit-lventau-titulo" class="form-label">Título</label>
+                <input type="text" name="titulo" id="edit-lventau-titulo" class="form-control">
+            </div>
+
+            <!-- Autor -->
+            <div class="mb-3">
+                <label for="edit-lventau-autor" class="form-label">Autor</label>
+                <select name="autor" id="edit-lventau-autor" class="form-select">
+                    {% for autor in autores %}
+                    <option value="{{ autor.id }}">{{ autor.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Categoría -->
+            <div class="mb-3">
+                <label for="edit-lventau-categoria" class="form-label">Categoría</label>
+                <select name="categoria" id="edit-lventau-categoria" class="form-select">
+                    {% for categoria in categorias %}
+                    <option value="{{ categoria.id }}">{{ categoria.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Precio -->
+            <div class="mb-3">
+                <label for="edit-lventau-precio" class="form-label">Precio</label>
+                <input type="number" name="precio" id="edit-lventau-precio" class="form-control">
+            </div>
+
+            <!-- Stock -->
+            <div class="mb-3">
+                <label for="edit-lventau-stock" class="form-label">Stock</label>
+                <input type="number" name="stock" id="edit-lventau-stock" class="form-control">
+            </div>
+
+            <!-- Estado -->
+            <div class="mb-3">
+                <label for="edit-lventau-estado" class="form-label">Estado</label>
+                <input type="text" name="estado" id="edit-lventau-estado" class="form-control">
+            </div>
+
+            <!-- Descripción -->
+            <div class="mb-3">
+                <label for="edit-lventau-descripcion" class="form-label">Descripción</label>
+                <textarea name="descripcion" id="edit-lventau-descripcion" class="form-control" rows="3"></textarea>
+            </div>
+
+
+
+            <div class="mb-3">
+                <label for="edit-lventau-solicitud" class="form-label">Solicitud</label>
+                <select name="solicitud" id="edit-lventau-solicitud" class="form-select">
+                    <option value="aprobado">aprobado</option>
+                    <option value="rechazado">rechazado</option>
+                </select>
+            </div>
+
+            <!-- Usuario -->
+            <div class="mb-3">
+                <label for="edit-lventau-usuario" class="form-label">Usuario</label>
+                <select name="usuario" id="edit-lventau-usuario" class="form-select">
+                    {% for usuario in usuarios %}
+                    <option value="{{ usuario.id }}">{{ usuario.username }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Tipo de Registro -->
+            <div class="mb-3">
+                <label for="edit-lventau-tipo-registro" class="form-label">Tipo de Registro</label>
+                <input type="text" name="tipo_registro" id="edit-lventau-tipo-registro" class="form-control">
+            </div>
+
+            <!-- URL de Imagen -->
+            <div class="mb-3">
+                <label for="edit-lventau-imagen-url" class="form-label">URL de Imagen</label>
+                <input type="text" name="imagen_url" id="edit-lventau-imagen-url" class="form-control">
+            </div>
+
+            <button type="submit" name="editar_lventau" class="btn btn-success">Guardar Cambios</button>
+            <button type="button" class="btn btn-secondary" onclick="hideEditLVentaU()">Cancelar</button>
+        </form>
+    </div>
+</div>
+
+
+    <!-- Solicitudes de Intercambio Recibidas -->
+<div id="editar_libro_catalogo" class="content-section" style="display: none;">
+
+    <div class="table-container">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Título</th>
+                    <th>Autor</th>
+                    <th>Categoría</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for libro in libros_page %}
+                <tr>
+                    <td>{{ libro.id }}</td>
+                    <td>{{ libro.titulo }}</td>
+                    <td>
+                        {% if libro.autor %}
+                            {{ libro.autor.nombre }}
+                        {% else %}
+                            Sin Autor
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if libro.categoria %}
+                            {{ libro.categoria.nombre }}
+                        {% else %}
+                            Sin Categoría
+                        {% endif %}
+                    </td>
+                    <td>
+                        <button class="btn btn-warning btn-sm" onclick="loadEditLibro(this)"
+                            data-id="{{ libro.id }}"
+                            data-titulo="{{ libro.titulo }}"
+                            {% if libro.autor %}
+                                data-autor="{{ libro.autor.id }}"
+                            {% else %}
+                                data-autor=""
+                            {% endif %}
+                            {% if libro.categoria %}
+                                data-categoria="{{ libro.categoria.id }}"
+                            {% else %}
+                                data-categoria=""
+                            {% endif %}
+                            data-descripcion="{{ libro.descripcion }}"
+                            data-precio="{{ libro.precio }}"
+                            data-stock="{{ libro.stock }}"
+                            data-formato="{{ libro.formato }}"
+                            data-idioma="{{ libro.idioma }}"
+                            data-anio="{{ libro.anio }}"
+                            data-num-paginas="{{ libro.num_paginas }}"
+                            data-encuadernacion="{{ libro.encuadernacion }}"
+                            data-dimensiones="{{ libro.dimensiones }}"
+                            data-imagen-url="{{ libro.imagen_url }}">
+                            Editar
+                        </button>
+
+                        <form method="post" style="display:inline-block;">
+                            {% csrf_token %}
+                            <input type="hidden" name="libro_id" value="{{ libro.id }}">
+                            <button type="submit" name="eliminar_libro" class="btn btn-danger btn-sm">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            
+        </table>
+
+        <!-- Paginación -->
+        <nav>
+            <ul class="pagination">
+                {% if libros_page.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page_libros={{ libros_page.previous_page_number }}">Anterior</a></li>
+                {% endif %}
+                <li class="page-item active"><span class="page-link">{{ libros_page.number }}</span></li>
+                {% if libros_page.has_next %}
+                <li class="page-item"><a class="page-link" href="?page_libros={{ libros_page.next_page_number }}">Siguiente</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Formulario para editar Libro -->
+    <div class="form-section" id="edit-libro-section" style="display:none;">
+        <h3>Editar Libro</h3>
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="libro_id" id="edit-libro-id">
+            
+            <!-- Título -->
+            <div class="mb-3">
+                <label for="edit-libro-titulo" class="form-label">Título</label>
+                <input type="text" name="titulo" id="edit-libro-titulo" class="form-control">
+            </div>
+            
+            <!-- Autor -->
+            <div class="mb-3">
+                <label for="edit-libro-autor" class="form-label">Autor</label>
+                <select name="autor" id="edit-libro-autor" class="form-select">
+                    {% for autor in autores %}
+                    <option value="{{ autor.id }}">{{ autor.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <!-- Categoría -->
+            <div class="mb-3">
+                <label for="edit-libro-categoria" class="form-label">Categoría</label>
+                <select name="categoria" id="edit-libro-categoria" class="form-select">
+                    {% for categoria in categorias %}
+                    <option value="{{ categoria.id }}">{{ categoria.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <!-- Descripción -->
+            <div class="mb-3">
+                <label for="edit-libro-descripcion" class="form-label">Descripción</label>
+                <textarea name="descripcion" id="edit-libro-descripcion" class="form-control" rows="3"></textarea>
+            </div>
+            
+            <!-- Precio -->
+            <div class="mb-3">
+                <label for="edit-libro-precio" class="form-label">Precio</label>
+                <input type="number" step="0.01" name="precio" id="edit-libro-precio" class="form-control">
+            </div>
+            
+            <!-- Stock -->
+            <div class="mb-3">
+                <label for="edit-libro-stock" class="form-label">Stock</label>
+                <input type="number" name="stock" id="edit-libro-stock" class="form-control">
+            </div>
+            
+            <!-- Formato -->
+            <div class="mb-3">
+                <label for="edit-libro-formato" class="form-label">Formato</label>
+                <input type="text" name="formato" id="edit-libro-formato" class="form-control">
+            </div>
+            
+            <!-- Idioma -->
+            <div class="mb-3">
+                <label for="edit-libro-idioma" class="form-label">Idioma</label>
+                <input type="text" name="idioma" id="edit-libro-idioma" class="form-control">
+            </div>
+            
+            <!-- Año -->
+            <div class="mb-3">
+                <label for="edit-libro-anio" class="form-label">Año</label>
+                <input type="number" name="anio" id="edit-libro-anio" class="form-control">
+            </div>
+            
+            <!-- Número de Páginas -->
+            <div class="mb-3">
+                <label for="edit-libro-num-paginas" class="form-label">Número de Páginas</label>
+                <input type="number" name="num_paginas" id="edit-libro-num-paginas" class="form-control">
+            </div>
+            
+            <!-- Encuadernación -->
+            <div class="mb-3">
+                <label for="edit-libro-encuadernacion" class="form-label">Encuadernación</label>
+                <input type="text" name="encuadernacion" id="edit-libro-encuadernacion" class="form-control">
+            </div>
+            
+            <!-- Dimensiones -->
+            <div class="mb-3">
+                <label for="edit-libro-dimensiones" class="form-label">Dimensiones</label>
+                <input type="text" name="dimensiones" id="edit-libro-dimensiones" class="form-control">
+            </div>
+            
+            <!-- URL de Imagen -->
+            <div class="mb-3">
+                <label for="edit-libro-imagen-url" class="form-label">URL de Imagen</label>
+                <input type="text" name="imagen_url" id="edit-libro-imagen-url" class="form-control">
+            </div>
+            
+            <!-- Botones -->
+            <button type="submit" name="editar_libro" class="btn btn-success">Guardar Cambios</button>
+            <button type="button" class="btn btn-secondary" onclick="hideEditLibro()">Cancelar</button>
+        </form>
+    </div>
+</div>
+</div>
+
+
+    <!-- Solicitudes de Intercambio Recibidas -->
+<div id="editar_usuario" class="content-section" style="display: none;">
+    <div class="table-container">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Usuario</th>
+                    <th>Email</th>
+                    <th>Rol</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for usuario in usuarios_page %}
+                <tr>
+                    <td>{{ usuario.id }}</td>
+                    <td>{{ usuario.username }}</td>
+                    <td>{{ usuario.email }}</td>
+                    <td>{{ usuario.is_staff|yesno:"Administrador,Usuario" }}</td>
+                    <td>
+                        <button class="btn btn-warning btn-sm" onclick="loadEditUsuario(this)"
+                            data-id="{{ usuario.id }}"
+                            data-username="{{ usuario.username }}"
+                            data-email="{{ usuario.email }}"
+                            data-first-name="{{ usuario.first_name }}"
+                            data-last-name="{{ usuario.last_name }}"
+                            data-is-staff="{{ usuario.is_staff }}"
+                            data-is-active="{{ usuario.is_active }}"
+                            data-birth-date="{{ usuario.birth_date|date:'Y-m-d' }}"
+                            data-phone-number="{{ usuario.phone_number }}"
+                            data-gender="{{ usuario.gender }}">
+                            Editar
+                        </button>
+                        <form method="post" style="display:inline-block;">
+                            {% csrf_token %}
+                            <input type="hidden" name="usuario_id" value="{{ usuario.id }}">
+                            <button type="submit" name="eliminar_usuario" class="btn btn-danger btn-sm">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Paginación -->
+        <nav>
+            <ul class="pagination">
+                {% if usuarios_page.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page_usuarios={{ usuarios_page.previous_page_number }}">Anterior</a></li>
+                {% endif %}
+                <li class="page-item active"><span class="page-link">{{ usuarios_page.number }}</span></li>
+                {% if usuarios_page.has_next %}
+                <li class="page-item"><a class="page-link" href="?page_usuarios={{ usuarios_page.next_page_number }}">Siguiente</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Formulario para editar Usuario -->
+    <div class="form-section" id="edit-usuario-section" style="display:none;">
+        <h3>Editar Usuario</h3>
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="usuario_id" id="edit-usuario-id">
+            
+            <!-- Nombre de Usuario -->
+            <div class="mb-3">
+                <label for="edit-usuario-username" class="form-label">Nombre de Usuario</label>
+                <input type="text" name="username" id="edit-usuario-username" class="form-control">
+            </div>
+            
+            <!-- Email -->
+            <div class="mb-3">
+                <label for="edit-usuario-email" class="form-label">Email</label>
+                <input type="email" name="email" id="edit-usuario-email" class="form-control">
+            </div>
+            
+            <!-- Primer Nombre -->
+            <div class="mb-3">
+                <label for="edit-usuario-first-name" class="form-label">Primer Nombre</label>
+                <input type="text" name="first_name" id="edit-usuario-first-name" class="form-control">
+            </div>
+            
+            <!-- Apellido -->
+            <div class="mb-3">
+                <label for="edit-usuario-last-name" class="form-label">Apellido</label>
+                <input type="text" name="last_name" id="edit-usuario-last-name" class="form-control">
+            </div>
+            
+            <!-- ¿Es Staff? -->
+            <div class="mb-3">
+                <label for="edit-usuario-is-staff" class="form-label">¿Es Staff?</label>
+                <input type="checkbox" name="is_staff" id="edit-usuario-is-staff" class="form-check-input">
+            </div>
+            
+            <!-- ¿Está Activo? -->
+            <div class="mb-3">
+                <label for="edit-usuario-is-active" class="form-label">¿Está Activo?</label>
+                <input type="checkbox" name="is_active" id="edit-usuario-is-active" class="form-check-input">
+            </div>
+            
+            <!-- Fecha de Nacimiento -->
+            <div class="mb-3">
+                <label for="edit-usuario-birth-date" class="form-label">Fecha de Nacimiento</label>
+                <input type="date" name="birth_date" id="edit-usuario-birth-date" class="form-control">
+            </div>
+            
+            <!-- Número de Teléfono -->
+            <div class="mb-3">
+                <label for="edit-usuario-phone-number" class="form-label">Número de Teléfono</label>
+                <input type="text" name="phone_number" id="edit-usuario-phone-number" class="form-control">
+            </div>
+            
+            <!-- Género -->
+            <div class="mb-3">
+                <label for="edit-usuario-gender" class="form-label">Género</label>
+                <select name="gender" id="edit-usuario-gender" class="form-select">
+                    <option value="">Seleccione un género</option>
+                    <option value="M">Masculino</option>
+                    <option value="F">Femenino</option>
+                    <option value="O">Otro</option>
+                </select>
+            </div>
+
+            <!-- Botones -->
+            <button type="submit" name="editar_usuario" class="btn btn-success">Guardar Cambios</button>
+            <button type="button" class="btn btn-secondary" onclick="hideEditUsuario()">Cancelar</button>
+        </form>
+    </div>
+</div>
+
+
+
+</div>
+
+
+
+<script>
+    // LVentaU
+    function loadEditLVentaU(button) {
+        // Obtener todos los atributos data-* del botón
+        const lventauId = button.getAttribute('data-id');
+        const isbn = button.getAttribute('data-isbn');
+        const titulo = button.getAttribute('data-titulo');
+        const autorId = button.getAttribute('data-autor');
+        const categoriaId = button.getAttribute('data-categoria');
+        const precio = button.getAttribute('data-precio');
+        const stock = button.getAttribute('data-stock');
+        const estado = button.getAttribute('data-estado');
+        const descripcion = button.getAttribute('data-descripcion');
+        const solicitud = button.getAttribute('data-solicitud');
+        const usuarioId = button.getAttribute('data-usuario');
+        const tipoRegistro = button.getAttribute('data-tipo-registro');
+        const imagenUrl = button.getAttribute('data-imagen-url');
+
+        // Asignar los valores al formulario
+        document.getElementById('edit-lventau-id').value = lventauId;
+        document.getElementById('edit-lventau-isbn').value = isbn;
+        document.getElementById('edit-lventau-titulo').value = titulo;
+        document.getElementById('edit-lventau-autor').value = autorId;
+        document.getElementById('edit-lventau-categoria').value = categoriaId;
+        document.getElementById('edit-lventau-precio').value = precio;
+        document.getElementById('edit-lventau-stock').value = stock;
+        document.getElementById('edit-lventau-estado').value = estado;
+        document.getElementById('edit-lventau-descripcion').value = descripcion;
+        document.getElementById('edit-lventau-solicitud').value = solicitud;
+        document.getElementById('edit-lventau-usuario').value = usuarioId;
+        document.getElementById('edit-lventau-tipo-registro').value = tipoRegistro;
+        document.getElementById('edit-lventau-imagen-url').value = imagenUrl;
+
+        // Mostrar la sección de edición
+        document.getElementById('edit-lventau-section').style.display = 'block';
+    }
+
+    function hideEditLVentaU() {
+        // Ocultar la sección de edición
+        document.getElementById('edit-lventau-section').style.display = 'none';
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // Libro
+    function loadEditLibro(button) {
+    document.getElementById('edit-libro-section').style.display = 'block';
+    document.getElementById('edit-libro-id').value = button.getAttribute('data-id');
+    document.getElementById('edit-libro-titulo').value = button.getAttribute('data-titulo');
+    document.getElementById('edit-libro-autor').value = button.getAttribute('data-autor');
+    document.getElementById('edit-libro-categoria').value = button.getAttribute('data-categoria');
+    document.getElementById('edit-libro-descripcion').value = button.getAttribute('data-descripcion');
+    document.getElementById('edit-libro-precio').value = button.getAttribute('data-precio');
+    document.getElementById('edit-libro-stock').value = button.getAttribute('data-stock');
+    document.getElementById('edit-libro-formato').value = button.getAttribute('data-formato');
+    document.getElementById('edit-libro-idioma').value = button.getAttribute('data-idioma');
+    document.getElementById('edit-libro-anio').value = button.getAttribute('data-anio');
+    document.getElementById('edit-libro-num-paginas').value = button.getAttribute('data-num-paginas');
+    document.getElementById('edit-libro-encuadernacion').value = button.getAttribute('data-encuadernacion');
+    document.getElementById('edit-libro-dimensiones').value = button.getAttribute('data-dimensiones');
+    document.getElementById('edit-libro-imagen-url').value = button.getAttribute('data-imagen-url');
+}
+
+function hideEditLibro() {
+    document.getElementById('edit-libro-section').style.display = 'none';
+}
+
+    function loadEditUsuario(button) {
+    document.getElementById('edit-usuario-section').style.display = 'block';
+    document.getElementById('edit-usuario-id').value = button.getAttribute('data-id');
+    document.getElementById('edit-usuario-username').value = button.getAttribute('data-username');
+    document.getElementById('edit-usuario-email').value = button.getAttribute('data-email');
+    document.getElementById('edit-usuario-first-name').value = button.getAttribute('data-first-name');
+    document.getElementById('edit-usuario-last-name').value = button.getAttribute('data-last-name');
+    document.getElementById('edit-usuario-is-staff').checked = button.getAttribute('data-is-staff') === 'true';
+    document.getElementById('edit-usuario-is-active').checked = button.getAttribute('data-is-active') === 'true';
+    document.getElementById('edit-usuario-birth-date').value = button.getAttribute('data-birth-date');
+    document.getElementById('edit-usuario-phone-number').value = button.getAttribute('data-phone-number');
+    document.getElementById('edit-usuario-gender').value = button.getAttribute('data-gender');
+}
+
+function hideEditUsuario() {
+    document.getElementById('edit-usuario-section').style.display = 'none';
+    }
+function showSection(sectionId) {
+    const sections = document.querySelectorAll('.content-section');
+    sections.forEach(section => section.style.display = 'none');
+    document.getElementById(sectionId).style.display = 'block';
+    }
+
+</script>
+{% endblock %}

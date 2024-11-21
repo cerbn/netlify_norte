@@ -1,0 +1,157 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block contenido %}
+<style>
+/* Estilos generales */
+body {
+    background-color: #f4f4f9;
+    font-family: Arial, sans-serif;
+}
+
+/* Contenedor de la información del autor */
+.author-profile {
+    margin: 40px auto;
+    padding: 30px;
+    border-radius: 15px;
+    background-color: #ffffff;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    width: 60%;
+    max-width: 800px;
+}
+
+/* Título del perfil */
+h1 {
+    color: #2F80ED;
+    margin-bottom: 20px;
+    font-size: 2rem;
+    text-align: center;
+}
+
+/* Información del autor */
+.profile-section {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.profile-item {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+}
+
+.profile-item label {
+    font-weight: bold;
+    color: #333;
+}
+
+.profile-item span {
+    color: #555;
+}
+
+.profile-image {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.profile-image img {
+    border-radius: 15px;
+    width: 200px;
+    height: 300px;
+    object-fit: cover;
+}
+
+/* Lista de libros */
+.books-list {
+    margin-top: 30px;
+}
+
+.books-list h2 {
+    font-size: 1.75rem;
+    color: #2F80ED;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.book-item {
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+}
+
+.book-item h3 {
+    font-size: 1.25rem;
+    color: #333;
+}
+
+.book-item p {
+    color: #777;
+}
+
+/* Botón de contacto */
+.contact-button {
+    display: block;
+    margin: 30px auto 0;
+    padding: 12px 25px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1rem;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.contact-button:hover {
+    background-color: #218838;
+}
+</style>
+
+<div class="author-profile">
+    <div class="profile-image">
+        <img src="{% static 'images/default-author.png' %}" alt="Foto del autor">
+    </div>
+    
+    <h1>Información del Autor</h1>
+
+    <div class="profile-section">
+        <div class="profile-item">
+            <label>Nombre:</label>
+            <span>{{ autor.nombre }}</span>
+        </div>
+        <div class="profile-item">
+            <label>Biografía:</label>
+            <span>{{ autor.biografia }}</span>
+        </div>
+<!--         <div class="profile-item">
+            <label>Nacionalidad:</label>
+            <span>{{ autor.nacionalidad }}</span>
+        </div>
+        <div class="profile-item">
+            <label>Número de libros publicados:</label>
+            <span>{{ autor.num_libros }}</span>
+        </div>
+        <div class="profile-item">
+            <label>Género(s) literario(s):</label>
+            <span>{{ autor.generos }}</span>
+        </div> -->
+    </div>
+
+    <div class="books-list">
+        <h2>Libros del Autor</h2>
+        {% for libro in libros %}
+        <div class="book-item">
+            <h3>{{ libro.titulo }}</h3>
+            <p>Publicado en: {{ libro.anio }}</p>
+            <p>Sinopsis: {{ libro.descripcion|truncatewords:30 }}</p>
+        </div>
+        {% empty %}
+        <p>No hay libros disponibles para este autor.</p>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

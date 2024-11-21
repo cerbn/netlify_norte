@@ -1,0 +1,506 @@
+{% extends 'app/base.html' %}
+
+{% block sidebar %}
+<div class="card mb-3">
+    <div class="card-header">Mis Ventas</div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item"><a href="#" onclick="showSection('registro_venta')">Registrar Nuevo Libro</a></li>
+    </ul>
+</div>
+<div class="card mb-3">
+    <div class="card-header">Intercambios</div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item"><a href="#" onclick="showSection('mis_libros')">Mis Libros publicados</a></li>
+        <li class="list-group-item"><a href="#" onclick="showSection('ver_libro_solicitado')">Solicitudes enviadas</a></li>
+        <li class="list-group-item"><a href="#" onclick="showSection('mis_solicitudes')">Solicitudes recibidas</a></li>
+    </ul>
+</div>
+<div class="card mb-3">
+    <div class="card-header">Mi Cuenta</div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item"><a href="{% url 'profile' %}" onclick="showSection('perfil')">Perfil</a></li>
+        <li class="list-group-item"><a href="{% url 'recuperar_contraseña' %}" onclick="showSection('cambiar_contrasena')">Cambiar Contraseña</a></li>
+        <li class="list-group-item"><a href="{% url 'profile' %}" onclick="showSection('direcciones')">Direcciones</a></li>
+    </ul>
+</div>
+{% endblock %}
+
+{% block contenido %}
+<style>
+    form {
+        max-width: 600px;
+        margin: auto;
+    }
+    label.form-label {
+        font-weight: bold;
+        color: #333;
+    }
+    button.btn {
+        font-size: 1.1rem;
+        margin-top: 20px;
+    }
+</style>
+
+<!-- Contenedor Principal de Secciones -->
+<div class="col-md-9">
+
+    <!-- Registrar Nuevo Producto -->
+    <div id="registro_venta" class="content-section">
+        <div class="card mb-4">
+            <div class="card-header">Registrar Nuevo Producto</div>
+            <div class="card-body">
+                <!-- Formulario de registro de libro -->
+                <form method="post" enctype="multipart/form-data" class="p-4 border rounded shadow-sm bg-white">
+                    {% csrf_token %}
+                    <div class="mb-3 position-relative">
+                        <label for="search_book" class="form-label">Buscar Libro</label>
+                        <input type="text" class="form-control" id="search_book" placeholder="Escribe el título o autor del libro...">
+                        <ul id="book_results" class="list-group mt-2 position-absolute" style="z-index: 1000; width: 100%;"></ul>
+                    </div>
+                    <!-- Campos de registro -->
+                    <div class="mb-3">
+                        <label for="id_isbn" class="form-label">ISBN</label>
+                        <input type="text" class="form-control" id="id_isbn" name="isbn" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_titulo" class="form-label">Título del Libro</label>
+                        <input type="text" class="form-control" id="id_titulo" name="titulo" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_autor" class="form-label">Autor</label>
+                        <select class="form-select" id="id_autor" name="autor" required>
+                            {% for c in autor %}
+                                <option value="{{ c.id }}">{{ c.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_categoria" class="form-label">Categoría</label>
+                        <select class="form-select" id="id_categoria" name="categoria" required>
+                            {% for c in categoria %}
+                                <option value="{{ c.id }}">{{ c.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_descripcion" class="form-label">Descripción</label>
+                        <textarea class="form-control" id="id_descripcion" name="descripcion" rows="3" readonly></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="tipo_registro" class="form-label">Tipo de Registro</label><br>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="venta" name="tipo_registro" value="venta" onclick="togglePrecioInput(true)">
+                            <label class="form-check-label" for="venta">Venta</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="intercambio" name="tipo_registro" value="intercambio" onclick="togglePrecioInput(false)">
+                            <label class="form-check-label" for="intercambio">Intercambio</label>
+                        </div>
+                    </div>
+                    <div class="mb-3" id="precioContainer" style="display: none;">
+                        <label for="id_precio" class="form-label">Precio (CLP)</label>
+                        <input type="number" class="form-control" id="id_precio" name="precio" step="0.01">
+                    </div>
+                    <div class="mb-3">
+                        <label for="imagen" class="form-label">Imagen</label>
+                        <input type="file" class="form-control" id="imagen" name="imagen" accept="image/*">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Registrar Producto</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <!-- --------------------------------Mis Libros para Intercambio ----------------------------------------------------------->
+
+
+    <!-- Mis Libros para Intercambio -->
+    <div id="mis_libros" class="content-section" style="display: none;">
+        <!-- Contenido Mis Libros para Intercambio -->
+        <div class="card mb-4">
+            <div class="card-header">Mis Libros publicados</div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Título</th>
+                                <th>Autor</th>
+                                <th>Precio</th>
+                                <th>tipo registro</th>
+                                <th>Estado solicitud</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if libros %}
+                                {% for libro in libros %}
+                                <tr>
+                                    <td>{{ libro.titulo }}</td>
+                                    <td>{{ libro.autor.nombre }}</td>
+                                    <td>{{ libro.precio }}</td>
+                                    <td>{{ libro.tipo_registro }}</td>
+                                    <td>{{ libro.solicitud }}</td>
+                                    <td>
+                                        <a href="{% url 'eliminar_libro_usuario' libro.id %}" class="button-eliminar">
+                                            🗑
+                                        </a>
+                                        
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="4">No tienes libros registrados para intercambio.</td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <!-- ---------------------------------------------Mis Libros Solicitados----------------------------------------------------------->
+
+
+
+
+    
+
+
+<!-- Solicitudes Enviadas -->
+<div id="ver_libro_solicitado" class="content-section" style="display: none;">
+    <div class="card mb-4">
+        <div class="card-header">Mis Solicitudes de Intercambio Enviadas</div>
+        <div class="card-body">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Libro Solicitado</th>
+                        <th>Propietario</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                        <th>Detalles</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for solicitud in solicitudes_enviadas %}
+                    <tr>
+                        <td>{{ solicitud.id }}</td>
+                        <td>{{ solicitud.libro.titulo }}</td>
+                        <td><a href="{% url 'perfil_usuario' solicitud.destinatario.id %}">{{ solicitud.destinatario.username }}</a></td>
+                        <td>{{ solicitud.estado }}</td>
+                        <td>
+                            {% if solicitud.estado == 'aprobacion pendiente' %}
+                                <button class="btn btn-secondary btn-sm" disabled>Pendiente</button>
+                                {% elif solicitud.estado == 'aprobado' %}
+                                <form action="{% url 'confirmar_intercambio' solicitud.id %}" method="post" class="d-inline">
+                                    {% csrf_token %}
+                                    <!-- Campo oculto para enviar el ID del usuario -->
+                                    <input type="hidden" name="usuario_id" value="{{ request.user.id }}">
+                                    <button type="submit" class="btn btn-primary btn-sm">Confirmar Intercambio</button>
+                                </form>
+                                {% elif solicitud.estado == 'intercambio pendiente' and solicitud.confirmado_solicitante %}
+                                <button class="btn btn-secondary btn-sm" disabled>{{ solicitud.estado }}</button>
+
+                                {% elif solicitud.estado == 'intercambio pendiente' and solicitud.confirmado_solicitante is None %}
+                                <form action="{% url 'confirmar_intercambio' solicitud.id %}" method="post" class="d-inline">
+                                    {% csrf_token %}
+                                    <!-- Campo oculto para enviar el ID del usuario -->
+                                    <input type="hidden" name="usuario_id" value="{{ request.user.id }}">
+                                    <button type="submit" class="btn btn-primary btn-sm">Confirmar Intercambio</button>
+                                </form>
+
+
+
+                                {% elif solicitud.estado == 'intercambiado'  %}
+                                <form action="{% url 'confirmar_devolucion' solicitud.id %}" method="post" class="d-inline">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="usuario_id" value="{{ request.user.id }}">
+                                    <button type="submit" class="btn btn-warning btn-sm">Confirmar Devolución</button>
+                                </form>
+
+                                {% elif solicitud.estado == 'finalizado pendiente' and solicitud.devolucion_confirmada_solicitante %}
+                                <button class="btn btn-secondary btn-sm" disabled>{{ solicitud.estado }}</button>
+
+                                {% elif solicitud.estado == 'finalizado pendiente' and solicitud.devolucion_confirmada_solicitante is None %}
+                                <form action="{% url 'confirmar_devolucion' solicitud.id %}" method="post" class="d-inline">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="usuario_id" value="{{ request.user.id }}">
+                                    <button type="submit" class="btn btn-warning btn-sm">Confirmar Devolución</button>
+                                </form>
+
+
+                            {% elif solicitud.estado == 'finalizado' and solicitud.calificacion_propietario is None %}
+                            <button class="btn btn-info btn-sm" onclick="mostrarCalificarIntercambio('{{ solicitud.id }}', '{{ solicitud.libro.titulo }}', '{{ solicitud.destinatario.username }}')">
+                                Calificar Usuario
+                            </button>
+                             
+                        
+                        
+                            {% else %}
+                                <button class="btn btn-secondary btn-sm" disabled>{{ solicitud.estado }}</button>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <button class="btn btn-info btn-sm" onclick="verLibroSolicitado('{{ solicitud.libro.titulo }}', '{{ solicitud.libro.autor.nombre }}', '{{ solicitud.libro.isbn }}', '{{ solicitud.libro.descripcion }}', '{{ solicitud.libro.precio }}')">Detalles</button>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center">No tienes solicitudes enviadas.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div id="calificarIntercambioSection" class="content-section" style="display: none; margin-top: 20px;">
+                <div class="card">
+                    <div class="card-header">Calificar Intercambio</div>
+                    <div class="card-body">
+                        <form method="post" action="{% url 'calificar_intercambio' 0 %}" id="calificarIntercambioForm">
+                            {% csrf_token %}
+                            <input type="hidden" name="solicitud_id" id="calificarSolicitudId">
+                            
+                            <h5 id="calificarLibroTitulo"></h5>
+                            <h6 id="calificarUsuario"></h6>
+                            
+                            <div class="mb-3">
+                                <label for="calificacion" class="form-label">Calificación (1-5):</label>
+                                <select name="calificacion" id="calificacion" class="form-select" required>
+                                    <option value="" disabled selected>Selecciona una calificación</option>
+                                    <option value="1">1 - Muy malo</option>
+                                    <option value="2">2 - Malo</option>
+                                    <option value="3">3 - Regular</option>
+                                    <option value="4">4 - Bueno</option>
+                                    <option value="5">5 - Excelente</option>
+                                </select>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">Enviar Calificación</button>
+                            <button type="button" class="btn btn-secondary" onclick="ocultarCalificarIntercambio()">Cancelar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <!-- Solicitudes de Intercambio Recibidas -->
+    <div id="mis_solicitudes" class="content-section" style="display: none;">
+        <div class="card mb-4">
+            <div class="card-header">Evaluar Solicitudes de Venta o Intercambio</div>
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Libro Solicitado</th>
+                            <th>Solicitante</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                            <th>Tipo de registro</th>
+                            <th>Ver Detalles</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for solicitud in solicitudes %}
+                        <tr>
+                            <td>{{ solicitud.id }}</td>
+                            <td>{{ solicitud.libro.titulo }}</td>
+                            <td><a href="{% url 'perfil_usuario' solicitud.solicitante.id %}">{{ solicitud.solicitante.username }}</a></td>
+                            <td>{{ solicitud.libro.tipo_registro }}</td>
+                            <td>{{ solicitud.estado }}</td>
+                            <td>
+                                {% if solicitud.estado == 'aprobacion pendiente' %}
+                                <a href="{% url 'procesar_solicitud' solicitud.id %}" class="btn btn-primary btn-sm">Ver Catálogo</a>
+
+
+
+                                {% elif solicitud.estado == 'aprobado' %}
+                                <form action="{% url 'confirmar_intercambio' solicitud.id %}" method="post" class="d-inline">
+                                    {% csrf_token %}
+                                    <!-- Campo oculto para enviar el ID del usuario -->
+                                    <input type="hidden" name="usuario_id" value="{{ request.user.id }}">
+                                    <button type="submit" class="btn btn-primary btn-sm">Confirmar Intercambio</button>
+                                </form>
+                                {% elif solicitud.estado == 'intercambio pendiente' and solicitud.confirmado_destinatario %}
+                                <button class="btn btn-secondary btn-sm" disabled>{{ solicitud.estado }}</button>
+
+                                {% elif solicitud.estado == 'intercambio pendiente' and solicitud.confirmado_destinatario is None %}
+                                <form action="{% url 'confirmar_intercambio' solicitud.id %}" method="post" class="d-inline">
+                                    {% csrf_token %}
+                                    <!-- Campo oculto para enviar el ID del usuario -->
+                                    <input type="hidden" name="usuario_id" value="{{ request.user.id }}">
+                                    <button type="submit" class="btn btn-primary btn-sm">Confirmar Intercambio</button>
+                                </form>
+
+
+                                {% elif solicitud.estado == 'intercambio pendiente' %}
+                                <button class="btn btn-secondary btn-sm" disabled>{{ solicitud.estado }}</button>
+                                <form action="{% url 'confirmar_intercambio' solicitud.id %}" method="post" class="d-inline">
+                                    {% csrf_token %}
+                                    <!-- Campo oculto para enviar el ID del usuario -->
+                                    <input type="hidden" name="usuario_id" value="{{ request.user.id }}">
+                                    <button type="submit" class="btn btn-primary btn-sm">Confirmar Intercambio</button>
+                                </form>
+
+
+
+
+                                {% elif solicitud.estado == 'intercambiado'  %}
+                                <form action="{% url 'confirmar_devolucion' solicitud.id %}" method="post" class="d-inline">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="usuario_id" value="{{ request.user.id }}">
+                                    <button type="submit" class="btn btn-warning btn-sm">Confirmar Devolución</button>
+                                </form>
+
+                                {% elif solicitud.estado == 'finalizado pendiente' and solicitud.devolucion_confirmada_destinatario %}
+                                <button class="btn btn-secondary btn-sm" disabled>{{ solicitud.estado }}</button>
+
+                                {% elif solicitud.estado == 'finalizado pendiente' and solicitud.devolucion_confirmada_destinatario is None %}
+                                <form action="{% url 'confirmar_devolucion' solicitud.id %}" method="post" class="d-inline">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="usuario_id" value="{{ request.user.id }}">
+                                    <button type="submit" class="btn btn-warning btn-sm">Confirmar Devolución</button>
+                                </form>
+                                
+
+                                
+                                {% elif solicitud.estado == 'finalizado' and solicitud.calificacion_solicitante is None %}
+                                <button class="btn btn-info btn-sm" onclick="mostrarFormularioCalificacion('{{ solicitud.id }}')">Calificar Usuario</button>
+                                {% else %}
+                                <button class="btn btn-secondary btn-sm" disabled>{{ solicitud.estado }}</button>
+                                
+                                {% endif %}
+                            </td>
+                            <td>
+                                <tr id="calificacion-formulario-{{ solicitud.id }}" style="display: none;">
+                                    <td colspan="6">
+                                        <form method="post" action="{% url 'calificar_intercambio' solicitud.id %}" class="mt-3">
+                                            {% csrf_token %}
+                                            <div class="mb-3">
+                                                <label for="calificacion-{{ solicitud.id }}" class="form-label">Calificación (1-5):</label>
+                                                <select name="calificacion" id="calificacion-{{ solicitud.id }}" class="form-select" required>
+                                                    <option value="" disabled selected>Selecciona una calificación</option>
+                                                    <option value="1">1 - Muy malo</option>
+                                                    <option value="2">2 - Malo</option>
+                                                    <option value="3">3 - Regular</option>
+                                                    <option value="4">4 - Bueno</option>
+                                                    <option value="5">5 - Excelente</option>
+                                                </select>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">Enviar Calificación</button>
+                                            <button type="button" class="btn btn-secondary" onclick="ocultarFormularioCalificacion('{{ solicitud.id }}')">Cancelar</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="6" class="text-center">No hay solicitudes pendientes.</td>
+                                </tr>
+                                {% endfor %}
+                </table>
+                <!-- Formulario de calificación -->
+            
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function togglePrecioInput(show) {
+        const precioContainer = document.getElementById('precioContainer');
+        precioContainer.style.display = show ? 'block' : 'none';
+        document.getElementById('id_precio').required = show;
+    }
+
+    document.getElementById('search_book').addEventListener('input', function() {
+        const query = this.value;
+        if (query.length > 2) {
+            fetch(`/buscar-libro-open/?query=${query}`)
+                .then(response => response.json())
+                .then(data => {
+                    const bookResults = document.getElementById('book_results');
+                    bookResults.innerHTML = '';
+                    data.libros.forEach(libro => {
+                        const li = document.createElement('li');
+                        li.classList.add('list-group-item', 'list-group-item-action');
+                        li.textContent = `${libro.titulo} - ${libro.autor}`;
+                        li.style.cursor = 'pointer';
+                        li.addEventListener('click', function() {
+                            document.getElementById('id_isbn').value = libro.isbn;
+                            document.getElementById('id_titulo').value = libro.titulo;
+                            document.getElementById('id_autor').value = libro.autor;
+                            document.getElementById('id_descripcion').value = `Publicado en ${libro.anio_publicacion}`;
+                            bookResults.innerHTML = '';
+                        });
+                        bookResults.appendChild(li);
+                    });
+                })
+                .catch(error => console.error('Error al buscar libros:', error));
+        }
+    });
+
+    function showSection(sectionId) {
+        const sections = document.querySelectorAll('.content-section');
+        sections.forEach(section => section.style.display = 'none');
+        document.getElementById(sectionId).style.display = 'block';
+    }
+
+    function verLibroSolicitado(titulo, autor, isbn, descripcion, precio) {
+        // Mostrar los detalles en el elemento correspondiente
+        document.getElementById('detalle_titulo').textContent = titulo;
+        document.getElementById('detalle_autor').textContent = autor;
+        document.getElementById('detalle_isbn').textContent = isbn;
+        document.getElementById('detalle_descripcion').textContent = descripcion;
+        document.getElementById('detalle_precio').textContent = precio ? `${precio} CLP` : 'Intercambio';
+
+        // Mostrar la sección de detalles del libro
+        showSection('ver_libro_solicitado');
+    }
+    function mostrarCalificarIntercambio(solicitudId, libroTitulo, usuario) {
+    // Actualizar los valores de los campos en el formulario
+    document.getElementById('calificarSolicitudId').value = solicitudId;
+    document.getElementById('calificarLibroTitulo').textContent = `Libro: ${libroTitulo}`;
+    document.getElementById('calificarUsuario').textContent = `Usuario: ${usuario}`;
+
+    // Actualizar la acción del formulario dinámicamente
+    const form = document.getElementById('calificarIntercambioForm');
+    form.action = form.action.replace(/\/\d+\/$/, `/${solicitudId}/`);
+
+    // Mostrar la sección
+    document.getElementById('calificarIntercambioSection').style.display = 'block';
+}
+
+function ocultarCalificarIntercambio() {
+    // Ocultar la sección de calificación
+    document.getElementById('calificarIntercambioSection').style.display = 'none';
+
+    // Restaurar la acción original del formulario
+    const form = document.getElementById('calificarIntercambioForm');
+    form.action = form.action.replace(/\/\d+\/$/, `/0/`);
+}
+function mostrarFormularioCalificacion(id) {
+        const formulario = document.getElementById(`calificacion-formulario-${id}`);
+        formulario.style.display = 'table-row'; // Mostrar el formulario
+    }
+
+    function ocultarFormularioCalificacion(id) {
+        const formulario = document.getElementById(`calificacion-formulario-${id}`);
+        formulario.style.display = 'none'; // Ocultar el formulario
+    }
+
+</script>
+{% endblock %}

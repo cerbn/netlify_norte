@@ -1,0 +1,21 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link href="{% static 'app/css/confirmacion_pago.css' %}" rel="stylesheet"> <!-- Enlace a la hoja de estilo home.css -->
+{% endblock %}
+{% block contenido %}
+    <div class="payment-container">
+        <div class="loader"></div>
+        <h2>Procesando tu pago...</h2>
+        <p>Por favor, espera un momento mientras finalizamos tu transacción.</p>
+    </div>
+
+    <script>
+        // Simula el proceso de pago y redirige después de 5 segundos
+        setTimeout(function() {
+            alert('Compra realizada con éxito');
+            window.location.href = "{% url 'orden_compra' %}"; // Redirige a la página de la orden de compra
+        }, 5000);
+    </script>
+{% endblock %}

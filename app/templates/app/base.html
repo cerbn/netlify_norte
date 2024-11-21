@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Polo Norte - Librería Online{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>/* base.css */
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #ffffff;
+            background: #36D1DC;  /* fallback for old browsers */
+            background: -webkit-linear-gradient(to right, #5B86E5, #36D1DC);  /* Chrome 10-25, Safari 5.1-6 */
+            background: linear-gradient(to right, #5B86E5, #36D1DC); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        }
+        .btn:hover {
+            background-color: #36D1DC; /* Color de fondo */
+            color: #fff; /* Color de texto */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+            transform: translateY(-2px); /* Efecto de flotación */
+        }
+        .card {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px; /* Bordes redondeados */
+        }
+
+        .list-group-item:hover {
+            transform: scale(1.05);
+            transition: transform 0.3s ease;
+        }
+
+        /* Estilos para la barra de navegación */
+        .navbar {
+ 
+            color: #000000; /* Letras negras */
+            border-bottom: 3px solid #88a0b5;
+        }
+        
+        .bg-celeste1 {
+
+            background: #5B86E5;  /* fallback for old browsers */
+           
+        }
+        .bg-celeste2 {
+            background: #5B86E5;  /* fallback for old browsers */
+            background: -webkit-linear-gradient(to right, #5B86E5, #36D1DC);  /* Chrome 10-25, Safari 5.1-6 */
+            background: linear-gradient(to right, #5B86E5, #36D1DC); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+        }
+/* Estilo general de la barra de navegación */
+.navbar {
+    background-color: rgba(54, 209, 220, 0.9); /* Fondo con transparencia */
+    padding: 15px 20px;
+    border-bottom: 2px solid #5B86E5; /* Borde inferior para dividir el navbar */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para darle profundidad */
+    position: sticky; /* Fija el navbar al hacer scroll */
+    top: 0;
+    z-index: 1000;
+}
+
+/* Estilo del logo/marca */
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ffffff;
+    text-transform: uppercase;
+    transition: color 0.3s ease;
+}
+
+.navbar-brand:hover {
+    color: #ffd700; /* Cambia el color al pasar el mouse */
+    transform: scale(1.1); /* Efecto de agrandamiento */
+}
+
+/* Estilo de los enlaces */
+.navbar-nav .nav-link {
+    color: #ffffff; /* Color blanco para los enlaces */
+    margin-right: 15px;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #ffd700; /* Cambia el color al pasar el mouse */
+    transform: translateY(-2px); /* Efecto de movimiento */
+}
+
+/* Estilo para el botón de búsqueda */
+.search-form .form-control {
+    border-radius: 30px;
+    padding: 10px;
+    width: 300px;
+}
+
+.search-form .btn-outline-success {
+    border-radius: 30px;
+    background-color: #36D1DC;
+    color: white;
+}
+
+.search-form .btn-outline-success:hover {
+    background-color: #5B86E5;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilo para el botón hamburguesa (dispositivos móviles) */
+.navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.6); /* Botón de menú transparente */
+}
+
+.navbar-toggler-icon {
+    color: #fff; /* Color del ícono de menú hamburguesa */
+}
+
+/* Estilo para el menú desplegable */
+.navbar .dropdown-menu {
+    background-color: #5B86E5;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.navbar .dropdown-item {
+    color: #ffffff;
+}
+
+.navbar .dropdown-item:hover {
+    background-color: #36D1DC;
+    color: #fff;
+}
+
+/* Botón de cerrar sesión */
+.navbar .nav-link {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* Ajuste responsivo para pantallas pequeñas */
+@media (max-width: 768px) {
+    .navbar-nav .nav-link {
+        font-size: 1rem; /* Reduce el tamaño del texto en pantallas pequeñas */
+    }
+}
+
+
+
+
+        /* Estilos generales para la barra de búsqueda */
+        .search-form {
+            display: flex;
+            justify-content: center; /* Centra el formulario en la página */
+        }
+
+        .search-form .form-control {
+            width: 400px; /* Ajusta este valor según el tamaño que prefieras */
+            border-radius: 30px; /* Bordes redondeados */
+            padding: 10px 20px; /* Espaciado interno */
+            border: 1px solid #88a0b5; /* Color del borde */
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra interna */
+            transition: width 0.4s ease, box-shadow 0.4s ease; /* Transición suave al cambiar el tamaño y la sombra */
+        }
+
+        .search-form .form-control:focus {
+            width: 600px; /* Expande el campo de búsqueda al enfocar */
+            box-shadow: 0 0 10px rgba(54, 209, 220, 0.5); /* Sombra externa al hacer foco */
+            outline: none; /* Eliminar el borde de foco predeterminado */
+        }
+
+        .search-form .btn-outline-success {
+            border-radius: 30px; /* Bordes redondeados para el botón */
+            padding: 10px 20px; /* Espaciado interno del botón */
+            background-color: #36D1DC; /* Color de fondo del botón */
+            color: #fff; /* Color del texto del botón */
+            border: none; /* Eliminar el borde del botón */
+            transition: all 0.3s ease; /* Transición suave en hover */
+        }
+
+        .search-form .btn-outline-success:hover {
+            background-color: #5B86E5; /* Color de fondo en hover */
+            color: #fff; /* Color del texto en hover */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra en hover */
+            transform: translateY(-2px); /* Efecto de flotación en hover */
+        }
+
+        /* Ajustes para pantallas grandes */
+        @media (min-width: 992px) {
+            .search-form .form-control {
+                width: 600px; /* Aumenta el tamaño en pantallas grandes */
+            }
+        }
+
+        /* Ajustes para pantallas pequeñas */
+        @media (max-width: 768px) {
+            .search-form .form-control {
+                width: 100%; /* Campo de búsqueda ocupa todo el ancho en dispositivos móviles */
+            }
+
+            .search-form .btn-outline-success {
+                width: 100%; /* Botón ocupa todo el ancho en dispositivos móviles */
+                margin-top: 10px; /* Espaciado adicional entre el botón y el campo de texto */
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+        /* Estilos para el contenedor de la página */
+        .container-fluid {
+            padding: 40px;
+        }
+
+        /* Estilos para el menú lateral */
+        .sidebar {
+            background: #6190E8;  /* fallback for old browsers */
+            background: -webkit-linear-gradient(to right, #A7BFE8, #6190E8);  /* Chrome 10-25, Safari 5.1-6 */
+            background: linear-gradient(to right, #A7BFE8, #6190E8); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+            padding: 10px;
+            color: rgb(180, 235, 249);
+        }
+
+        .sidebar h5 {
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 18px;
+            color: #7e9bb0;
+        }
+
+        .sidebar .list-group-item {
+            background-color: transparent;
+            border: none;
+            color: rgb(180, 235, 249);
+        }
+
+        .sidebar .list-group-item a {
+            color: rgb(0, 0, 0);
+            text-decoration: none;
+            padding: 10px;
+            display: block;
+        }
+
+        .sidebar .list-group-item a:hover {
+            background-color: #f7f7f7; /* Iluminación menú lateral */
+            color: rgb(3, 135, 60); /* Color letras al iluminar */
+            border-radius: 10px;
+        }
+
+        /* Estilos para el contenido principal */
+        main {
+            background: #adadae;  /* fallback for old browsers */
+            background: -webkit-linear-gradient(to right, #A7BFE8, #ffffff);  /* Chrome 10-25, Safari 5.1-6 */
+            background: linear-gradient(to right, #A7BFE8, #6190E8); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Estilos para el pie de página */
+        footer {
+            background-color: #4b79a1;
+            color: rgb(11, 148, 166);
+            padding: 20px 0;
+        }
+
+        footer h5 {
+            margin-bottom: 15px;
+            font-weight: bold;
+            color: #1a2730;
+        }
+
+        footer .list-unstyled li a {
+            color: #0b7ccd;
+        }
+
+        footer .list-unstyled li a:hover {
+            color: rgb(169, 209, 213);
+            text-decoration: underline;
+        }
+
+        footer .text-center {
+            margin-top: 10px;
+            color: #0f1215;
+        }
+
+        footer .text-center p {
+            margin: 0;
+        }
+
+        /* Ajustes para pantallas pequeñas */
+        @media (max-width: 768px) {
+            .sidebar {
+                margin-bottom: 20px;
+            }
+
+            main {
+                padding: 15px;
+            }
+
+            .navbar {
+                border-bottom: none;
+            }
+        }
+    </style>
+    {% block extra_css %}
+    {% endblock %}
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-celeste2">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'home' %}">Polo Norte</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'carrito' %}">Carrito</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'seguimiento' %}">Seguimiento</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'pedidos' %}">Mis Pedidos</a>
+                        </li>
+                        <li class="nav-item">
+                            <h5>{{ user.username }}</h5>
+                        </li>
+                    {% endif %}
+                </ul>
+    
+                <form class="d-flex mx-auto search-form" method="GET" action="#">
+                    <div class="input-group">
+                        <input class="form-control me-2" type="search" name="search" placeholder="Buscar libros..." aria-label="Search" value="{{ request.GET.search }}">
+                        <button class="btn btn-outline-success" type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </form>
+    
+                <ul class="navbar-nav ms-auto">
+                    {% if user.is_authenticated %}
+                        {% if user.is_staff %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'trabajador' %}">Panel de Trabajador</a>
+                            </li>
+                        {% endif %}
+    
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Menú
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="{% url 'profile' %}">Mi perfil</a></li>
+                                <li><a class="dropdown-item" href="{% url 'Registrar_libro_usuario' %}">Publicar Libro</a></li>
+                                <li><a class="dropdown-item" href="{% url 'mesa_ayuda_usuario' %}">Ayuda</a></li>
+                            </ul>
+                        </li>
+                        <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="nav-link">Cerrar sesión</button>
+                        </form>
+    
+                        {% if user.is_staff %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'mesa_ayuda_trabajador' %}">Gestionar Problemas</a>
+                        </li>
+                        {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'mesa_ayuda_usuario' %}">Mesa de Ayuda</a>
+                        </li>
+                        {% endif %}
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">Iniciar sesión</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+
+    <div class="container-fluid bg-celeste2">
+        <div class="row">
+
+
+            <!-- Menú Lateral de Perfil -->
+            
+            <nav class="col-md-2 d-none d-md-block bg-celeste1 sidebar">
+                <div class="sidebar bg-celeste1">
+                    {% block sidebar %}
+
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            Categorias
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><a href="{% url 'libros_por_categoria' 41 %}">Artes</a></li>
+                            <li class="list-group-item"><a href="{% url 'libros_por_categoria' 42 %}">Biografías, Literatura Y Estudios Literarios</a></li>
+                            <li class="list-group-item"><a href="{% url 'libros_por_categoria' 43 %}">Ciencias De La Tierra, Geografía, Medioambiente, Planificación</a></li>
+                            <li class="list-group-item"><a href="{% url 'libros_por_categoria' 44 %}">Computación Y Tecnología De La Información</a></li>
+                            <li class="list-group-item"><a href="{% url 'libros_por_categoria' 45 %}">Consulta, Información Y Materias Interdisciplinares</a></li>
+                            <li class="list-group-item"><a href="{% url 'libros_por_categoria' 46 %}">Deportes Y Actividades De Ocio Al Aire Libre</a></li>
+                            <li class="list-group-item"><a href="{% url 'libros_por_categoria' 47 %}">Derecho</a></li>
+                            <li class="list-group-item"><a href="{% url 'libros_por_categoria' 48 %}">Economía, Finanzas, Empresa Y Gestión</a></li>
+                            <li class="list-group-item"><a href="{% url 'libros_por_categoria' 49 %}">Estilos De Vida, Aficiones Y Ocio</a></li>
+                            <li class="list-group-item"><a href="{% url 'libros_por_categoria' 50 %}">Ficción Y Temas Afines</a></li>
+                            <li class="list-group-item"><a href="{% url 'libros_por_categoria' 51 %}">Filosofía Y Religión</a></li>
+                            <li class="list-group-item"><a href="{% url 'libros_por_categoria' 52 %}">Historia Y Arqueología</a></li>
+                            <li class="list-group-item"><a href="{% url 'libros_por_categoria' 53 %}">Infantiles, Juveniles Y Didácticos</a></li>
+                            <li class="list-group-item"><a href="{% url 'libros_por_categoria' 54 %}">Lenguaje Y Lingüística</a></li>
+                            <li class="list-group-item"><a href="{% url 'libros_por_categoria' 55 %}">Matemáticas Y Ciencias</a></li>
+                            <li class="list-group-item"><a href="{% url 'libros_por_categoria' 56 %}">Medicina, Enfermería, Veterinaria</a></li>
+                            <li class="list-group-item"><a href="{% url 'libros_por_categoria' 57 %}">Novela Gráfica, Libros De Cómics, Dibujos Animados</a></li>
+                            <li class="list-group-item"><a href="{% url 'libros_por_categoria' 58 %}">Salud, Relaciones Y Desarrollo Personal</a></li>
+                            <li class="list-group-item"><a href="{% url 'libros_por_categoria' 59 %}">Sociedad Y Ciencias Sociales</a></li>
+                            <li class="list-group-item"><a href="{% url 'libros_por_categoria' 60 %}">Tecnología, Ingeniería, Agricultura, Procesos Industriales</a></li>
+                            <li class="list-group-item"><a href="{% url 'libros_por_categoria' 61 %}">Calificadores De Período De Tiempo</a></li>
+                            <li class="list-group-item"><a href="{% url 'libros_por_categoria' 62 %}">Calificadores De Lengua</a></li>
+                            <li class="list-group-item"><a href="{% url 'libros_por_categoria' 63 %}">Calificadores De Lugar</a></li>
+                            <li class="list-group-item"><a href="{% url 'libros_por_categoria' 64 %}">Calificadores De Interés</a></li>
+                            <li class="list-group-item"><a href="{% url 'libros_por_categoria' 65 %}">Calificadores De Estilo</a></li>
+                            
+                        </ul>
+                    </div>
+                    {% endblock %}
+
+                </div>
+            </nav>
+
+
+            <!-- Contenido Principal -->
+            <main role="main" class="col-md-10 ms-sm-auto px-4">
+                {% block contenido %}
+
+
+                
+                {% endblock %}
+            </main>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-light py-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>Enlaces Rápidos</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="{% url 'mesa_ayuda_usuario' %}">Sobre Nosotros</a></li>
+                        <li><a href="#">Política de Privacidad</a></li>
+                        <li><a href="#">Términos y Condiciones</a></li>
+                        <li><a href="#">Contacto</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Servicios</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="{% url 'mesa_ayuda_usuario' %}">Asistencia al Cliente</a></li>
+                        <li><a href="#">Envíos y Devoluciones</a></li>
+                        <li><a href="#">Métodos de Pago</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Redes Sociales</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#">Facebook</a></li>
+                        <li><a href="#">Twitter</a></li>
+                        <li><a href="#">Instagram</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="text-center mt-3">
+                <p>&copy; 2024 Polo Norte. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
+
+
+

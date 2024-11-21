@@ -1,0 +1,25 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block contenido %}
+    <meta charset="UTF-8">
+    <title>Buscar Libro</title>
+</head>
+<body>
+    <h1>Buscar Libro</h1>
+    
+    <form method="get" action="{% url 'buscar_libro' %}">
+        <input type="text" name="query" placeholder="Título, autor o ISBN" value="{{ query }}">
+        <button type="submit">Buscar</button>
+    </form>
+
+    {% if resultado %}
+        <h2>Resultado de la Búsqueda</h2>
+        <p><strong>Título:</strong> {{ resultado.title }}</p>
+        <p><strong>Autor:</strong> {{ resultado.author_name.0 }}</p>
+        <p><strong>ISBN:</strong> {{ resultado.isbn.0 }}</p>
+        <p><strong>Año de Publicación:</strong> {{ resultado.first_publish_year }}</p>
+    {% elif query %}
+        <p>No se encontraron resultados para "{{ query }}".</p>
+    {% endif %}
+    {% endblock %}
