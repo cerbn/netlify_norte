@@ -84,5 +84,6 @@ urllib3
 uvicorn
 websockets
 Werkzeug
+whitenoise
 yarl
 zope.interface
